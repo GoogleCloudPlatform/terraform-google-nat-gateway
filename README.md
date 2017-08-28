@@ -29,7 +29,8 @@ Add the `nat-REGION` tag to your instances without external IPs to route outboun
 ### Output variables 
 
 - `depends_id`: Value that can be used for intra-module dependency creation.
-- `network_ip`: The internal IP address of the NAT gateway instance.
+- `gateway_ip`: The internal IP address of the NAT gateway instance.
+- `external_ip`: The external IP address of the NAT gateway instance.
 
 ## Resources created
 
