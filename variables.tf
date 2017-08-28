@@ -33,6 +33,11 @@ variable zone {
   default     = ""
 }
 
+variable machine_type {
+  description = "The machine type for the NAT gateway instance"
+  default     = "n1-standard-1"
+}
+
 variable ip {
   description = "Override the IP used in the `region_params` map for the region."
   default     = ""
