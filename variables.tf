@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 variable network {
   description = "The network to deploy to"
   default     = "default"
@@ -31,6 +31,17 @@ variable region {
 variable zone {
   description = "Override the zone used in the `region_params` map for the region."
   default     = ""
+}
+
+variable tags {
+  description = "Additional compute instance network tags to apply route to."
+  type        = "list"
+  default     = []
+}
+
+variable route_priority {
+  description = "The priority for the Compute Engine Route"
+  default = 800
 }
 
 variable machine_type {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 data "template_file" "nat-startup-script" {
   template = <<EOF
 #!/bin/bash -xe
@@ -63,8 +63,8 @@ resource "google_compute_route" "nat-gateway" {
   dest_range  = "0.0.0.0/0"
   network     = "${var.network}"
   next_hop_ip = "${var.ip == "" ? lookup(var.region_params["${var.region}"], "ip") : var.ip}"
-  tags        = ["nat-${var.region}"]
-  priority    = 800
+  tags        = "${compact(concat(list("nat-${var.region}"), var.tags))}"
+  priority    = "${var.route_priority}"
   depends_on  = ["module.nat-gateway"]
 }
 
@@ -76,8 +76,8 @@ resource "google_compute_firewall" "nat-gateway" {
     protocol = "all"
   }
 
-  source_tags = ["nat-${var.region}"]
-  target_tags = ["nat-${var.region}"]
+  source_tags = "${compact(concat(list("nat-${var.region}"), var.tags))}"
+  target_tags = "${compact(concat(list("nat-${var.region}"), var.tags))}"
 }
 
 resource "google_compute_address" "default" {

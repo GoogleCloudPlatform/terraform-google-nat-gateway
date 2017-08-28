@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 output depends_id {
   description = "Value that can be used for intra-module dependency creation."
   value       = "${module.nat-gateway.depends_id}"
