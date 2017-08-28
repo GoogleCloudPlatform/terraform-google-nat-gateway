@@ -38,7 +38,7 @@ EOF
 }
 
 module "nat-gateway" {
-  source            = "github.com/danisla/terraform-google-managed-instance-group"
+  source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
   region            = "${var.region}"
   zone              = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network           = "${var.network}"
