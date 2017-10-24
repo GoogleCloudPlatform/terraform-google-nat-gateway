@@ -63,9 +63,8 @@ resource "google_compute_route" "nat-gateway" {
   dest_range  = "0.0.0.0/0"
   network     = "${var.network}"
   next_hop_ip = "${var.ip == "" ? lookup(var.region_params["${var.region}"], "ip") : var.ip}"
-  tags        = "${compact(concat(list("nat-${var.region}"), var.tags))}"
+  tags        = ["${compact(concat(list("nat-${var.region}"), var.tags))}"]
   priority    = "${var.route_priority}"
-  depends_on  = ["module.nat-gateway"]
 }
 
 resource "google_compute_firewall" "nat-gateway" {
@@ -76,8 +75,8 @@ resource "google_compute_firewall" "nat-gateway" {
     protocol = "all"
   }
 
-  source_tags = "${compact(concat(list("nat-${var.region}"), var.tags))}"
-  target_tags = "${compact(concat(list("nat-${var.region}"), var.tags))}"
+  source_tags = ["${compact(concat(list("nat-${var.region}"), var.tags))}"]
+  target_tags = ["${compact(concat(list("nat-${var.region}"), var.tags))}"]
 }
 
 resource "google_compute_address" "default" {
