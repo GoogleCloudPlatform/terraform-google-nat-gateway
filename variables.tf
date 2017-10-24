@@ -119,8 +119,8 @@ variable region_params {
       ip   = "10.146.1.1"
     }
 
-    austrailia-southeast1 {
-      zone = "austrailia-southeast1-b"
+    australia-southeast1 {
+      zone = "australia-southeast1-b"
       ip   = "10.152.1.1"
     }
   }
