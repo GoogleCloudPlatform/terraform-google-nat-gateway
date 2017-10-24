@@ -65,7 +65,6 @@ resource "google_compute_route" "nat-gateway" {
   next_hop_ip = "${var.ip == "" ? lookup(var.region_params["${var.region}"], "ip") : var.ip}"
   tags        = "${compact(concat(list("nat-${var.region}"), var.tags))}"
   priority    = "${var.route_priority}"
-  depends_on  = ["module.nat-gateway"]
 }
 
 resource "google_compute_firewall" "nat-gateway" {
