@@ -44,7 +44,7 @@ module "nat-gateway" {
   network           = "${var.network}"
   subnetwork        = "${var.subnetwork}"
   machine_type      = "${var.machine_type}"
-  name              = "nat-gateway-${var.region}"
+  name              = "nat-gateway-${var.zone}"
   compute_image     = "debian-cloud/debian-8"
   size              = 1
   network_ip        = "${var.ip == "" ? lookup(var.region_params["${var.region}"], "ip") : var.ip}"
@@ -59,7 +59,7 @@ module "nat-gateway" {
 }
 
 resource "google_compute_route" "nat-gateway" {
-  name        = "nat-${var.region}"
+  name        = "nat-${var.zone}"
   dest_range  = "0.0.0.0/0"
   network     = "${var.network}"
   next_hop_ip = "${var.ip == "" ? lookup(var.region_params["${var.region}"], "ip") : var.ip}"
@@ -68,7 +68,7 @@ resource "google_compute_route" "nat-gateway" {
 }
 
 resource "google_compute_firewall" "nat-gateway" {
-  name    = "nat-${var.region}"
+  name    = "nat-${var.zone}"
   network = "${var.network}"
 
   allow {
@@ -80,5 +80,5 @@ resource "google_compute_firewall" "nat-gateway" {
 }
 
 resource "google_compute_address" "default" {
-  name = "nat-${var.region}"
+  name = "nat-${var.zone}"
 }
