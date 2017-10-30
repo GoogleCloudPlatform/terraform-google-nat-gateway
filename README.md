@@ -6,9 +6,10 @@ Modular NAT Gateway on Google Compute Engine for Terraform.
 
 ```ruby
 module "nat" {
-  source  = "GoogleCloudPlatform/nat-gateway/google"
-  region  = "us-central1"
-  network = "default"
+  source     = "GoogleCloudPlatform/nat-gateway/google"
+  region     = "us-central1"
+  network    = "default"
+  subnetwork = "default"
 }
 ```
 
