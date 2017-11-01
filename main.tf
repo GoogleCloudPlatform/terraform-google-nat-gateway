@@ -22,10 +22,14 @@ data "template_file" "nat-startup-script" {
 sysctl -w net.ipv4.ip_forward=1
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
+apt-get update
+
+# Install nginx for instance http health check
+apt-get install -y nginx
+
 ENABLE_SQUID="${var.squid_enabled}"
 
 if [[ "$ENABLE_SQUID" == "true" ]]; then
-  apt-get update
   apt-get install -y squid3
 
   cat - > /etc/squid3/squid.conf <<'EOM'
@@ -43,13 +47,14 @@ module "nat-gateway" {
   zone              = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network           = "${var.network}"
   subnetwork        = "${var.subnetwork}"
+  target_tags       = ["${compact(concat(list("nat-${var.zone}"), var.tags))}"]
   machine_type      = "${var.machine_type}"
   name              = "nat-gateway-${var.zone}"
   compute_image     = "debian-cloud/debian-8"
   size              = 1
   network_ip        = "${var.ip == "" ? lookup(var.region_params["${var.region}"], "ip") : var.ip}"
   can_ip_forward    = "true"
-  service_port      = "8080"
+  service_port      = "80"
   service_port_name = "http"
   startup_script    = "${data.template_file.nat-startup-script.rendered}"
 
