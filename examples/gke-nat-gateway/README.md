@@ -44,7 +44,7 @@ terraform apply
 Run a sample app to inspect the external IP seen by a pod:
 
 ```
-kubectl run example --image centos:7 -- bash -c 'while true; do curl -s http://ifconfig.co/ip; sleep 5; done'
+kubectl run example --image centos:7 -- bash -c 'while true; do curl -s http://ipinfo.io/ip; sleep 5; done'
 ```
 
 ```
