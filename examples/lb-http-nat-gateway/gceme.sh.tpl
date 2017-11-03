@@ -72,7 +72,7 @@ function metadata_value($value) {
 	</tr>
 	<tr>
 	  <td>External IP</td>
-	  <td><?php printf(metadata_value("instance/network-interfaces/0/access-configs/0/external-ip")) ?></td>
+	  <td><?php printf(file_get_contents("http://ipinfo.io/ip")) ?></td>
 	</tr>
   </tbody>
 </table>

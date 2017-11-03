@@ -28,9 +28,11 @@ EXTERNAL_IP=$(terraform output -module gce-lb-http | grep external_ip | cut -d =
 (until curl -sf -o /dev/null http://${EXTERNAL_IP}; do echo "Waiting for Load Balancer... "; sleep 5 ; done) && open http://${EXTERNAL_IP}
 ```
 
-> Wait for all instance to become healthy per output of: `gcloud compute backend-services get-health group-http-lb-backend-0 --global`. This may take several minutes.
+You should see the details of instances from `group1`. The `External IP` field should match the external IP of the NAT gateway instnace:
 
-You should see the instance details from `group1`.
+```
+terraform output -module nat-gateway
+```
 
 ## Cleanup
 
