@@ -47,7 +47,7 @@ module "nat-gateway" {
   zone              = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network           = "${var.network}"
   subnetwork        = "${var.subnetwork}"
-  target_tags       = ["${compact(concat(list("nat-${var.zone}"), var.tags))}"]
+  target_tags       = ["nat-${var.zone}"]
   machine_type      = "${var.machine_type}"
   name              = "nat-gateway-${var.zone}"
   compute_image     = "debian-cloud/debian-8"
@@ -80,8 +80,8 @@ resource "google_compute_firewall" "nat-gateway" {
     protocol = "all"
   }
 
-  source_tags = ["${compact(concat(list("nat-${var.region}"), var.tags))}"]
-  target_tags = ["${compact(concat(list("nat-${var.region}"), var.tags))}"]
+  source_tags = ["${compact(concat(list("nat-${var.zone}"), var.tags))}"]
+  target_tags = ["${compact(concat(list("nat-${var.zone}"), var.tags))}"]
 }
 
 resource "google_compute_address" "default" {
