@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
+variable project {
+  description = "The project to deploy to, if not set the default provider project is used."
+  default     = ""
+}
+
 variable network {
   description = "The network to deploy to"
   default     = "default"
+}
+
+variable network_project {
+  description = "Name of the project for the network. Useful for shared VPC. Default is var.project."
+  default     = ""
 }
 
 variable subnetwork {
@@ -41,7 +51,7 @@ variable tags {
 
 variable route_priority {
   description = "The priority for the Compute Engine Route"
-  default = 800
+  default     = 800
 }
 
 variable machine_type {
@@ -71,57 +81,46 @@ variable region_params {
   default = {
     us-west1 {
       zone = "us-west1-b"
-      ip   = "10.138.1.1"
     }
 
     us-central1 {
       zone = "us-central1-f"
-      ip   = "10.128.1.1"
     }
 
     us-east1 {
       zone = "us-east1-b"
-      ip   = "10.142.1.1"
     }
 
     us-east4 {
       zone = "us-east4-b"
-      ip   = "10.150.1.1"
     }
 
     europe-west1 {
       zone = "europe-west1-b"
-      ip   = "10.132.1.1"
     }
 
     europe-west2 {
       zone = "europe-west2-b"
-      ip   = "10.154.1.1"
     }
 
     europe-west3 {
       zone = "europe-west3-b"
-      ip   = "10.156.1.1"
     }
 
     asia-southeast1 {
       zone = "asia-southeast1-b"
-      ip   = "10.148.1.1"
     }
 
     asia-east1 {
       zone = "asia-east1-b"
-      ip   = "10.142.1.1"
     }
 
     asia-northeast1 {
       zone = "asia-northeast1-b"
-      ip   = "10.146.1.1"
     }
 
     australia-southeast1 {
       zone = "australia-southeast1-b"
-      ip   = "10.152.1.1"
     }
   }
 }
