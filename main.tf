@@ -78,7 +78,7 @@ resource "google_compute_route" "nat-gateway" {
   network                = "${data.google_compute_network.network.self_link}"
   next_hop_instance      = "${element(split("/", module.nat-gateway.instances[0]), 10)}"
   next_hop_instance_zone = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  tags                   = ["${compact(concat(list("nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+  tags                   = ["${compact(concat(list("nat-${var.region}"), var.tags))}"]
   priority               = "${var.route_priority}"
 }
 
