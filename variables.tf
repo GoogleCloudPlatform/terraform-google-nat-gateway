@@ -122,7 +122,7 @@ variable region_params {
     australia-southeast1 {
       zone = "australia-southeast1-b"
     }
-    asia-south {
+    asia-south1 {
       zone = "asia-south1-a"
     }
   }
