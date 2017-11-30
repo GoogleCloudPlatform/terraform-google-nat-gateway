@@ -13,7 +13,7 @@ module "nat" {
 }
 ```
 
-Add the `nat-REGION` tag to your instances without external IPs to route outbound traffic through the nat gateway.
+Add the `nat-REGION-ZONE` tag to your instances without external IPs to route outbound traffic through the nat gateway.
 
 ## Resources created
 
