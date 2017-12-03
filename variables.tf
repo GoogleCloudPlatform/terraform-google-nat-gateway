@@ -125,6 +125,7 @@ variable region_params {
 
     asia-south1 {
       zone = "asia-south1-b"
+    }
 
     southamerica-east1 {
       zone = "southamerica-east1-b"
