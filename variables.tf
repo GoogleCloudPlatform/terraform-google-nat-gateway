@@ -43,6 +43,11 @@ variable zone {
   default     = ""
 }
 
+variable name {
+  description = "Prefix added to the resource names, for example 'prod-'. By default, resources will be named in the form of '<name>nat-gateway-<zone>'"
+  default     = ""
+}
+
 variable tags {
   description = "Additional compute instance network tags to apply route to."
   type        = "list"

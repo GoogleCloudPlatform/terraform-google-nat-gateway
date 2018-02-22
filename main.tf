@@ -53,9 +53,9 @@ module "nat-gateway" {
   zone              = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network           = "${var.network}"
   subnetwork        = "${var.subnetwork}"
-  target_tags       = ["nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
+  target_tags       = ["${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
   machine_type      = "${var.machine_type}"
-  name              = "nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name              = "${var.name}nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   compute_image     = "debian-cloud/debian-8"
   size              = 1
   network_ip        = "${var.ip}"
@@ -73,27 +73,27 @@ module "nat-gateway" {
 }
 
 resource "google_compute_route" "nat-gateway" {
-  name                   = "nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name                   = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   dest_range             = "0.0.0.0/0"
   network                = "${data.google_compute_network.network.self_link}"
   next_hop_instance      = "${element(split("/", element(module.nat-gateway.instances[0], 0)), 10)}"
   next_hop_instance_zone = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  tags                   = ["${compact(concat(list("nat-${var.region}"), var.tags))}"]
+  tags                   = ["${compact(concat(list("${var.name}nat-${var.region}"), var.tags))}"]
   priority               = "${var.route_priority}"
 }
 
 resource "google_compute_firewall" "nat-gateway" {
-  name    = "nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network = "${var.network}"
 
   allow {
     protocol = "all"
   }
 
-  source_tags = ["${compact(concat(list("nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
-  target_tags = ["${compact(concat(list("nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
 }
 
 resource "google_compute_address" "default" {
-  name = "nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
 }
