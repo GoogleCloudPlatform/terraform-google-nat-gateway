@@ -26,5 +26,5 @@ output gateway_ip {
 
 output external_ip {
   description = "The external IP address of the NAT gateway instance."
-  value       = "${google_compute_address.default.address}"
+  value       = "${var.nat_ip == "" ? element(concat(google_compute_address.default.*.address, list("")), 0) : var.nat_ip}"
 }
