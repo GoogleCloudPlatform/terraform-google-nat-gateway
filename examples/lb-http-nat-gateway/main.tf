@@ -46,7 +46,7 @@ module "mig1" {
 
 module "nat-gateway" {
   // source  = "github.com/GoogleCloudPlatform/terraform-google-nat-gateway"
-  source = "../../"
+  source  = "../../"
   region  = "us-west1"
   network = "default"
 }
