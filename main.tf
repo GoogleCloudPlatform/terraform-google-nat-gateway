@@ -73,7 +73,7 @@ module "nat-gateway" {
 }
 
 resource "google_compute_route" "nat-gateway" {
-  name                   = "${var.name}-nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name                   = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   project                = "${var.project}"
   dest_range             = "0.0.0.0/0"
   network                = "${data.google_compute_network.network.self_link}"
