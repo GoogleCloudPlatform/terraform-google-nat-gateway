@@ -69,6 +69,11 @@ variable ip {
   default     = ""
 }
 
+variable nat_ip {
+  description = "Use an existing external IP instead of creating a new one"
+  default     = ""
+}
+
 variable squid_enabled {
   description = "Enable squid3 proxy on port 3128."
   default     = "false"
