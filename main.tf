@@ -74,6 +74,7 @@ module "nat-gateway" {
 
 resource "google_compute_route" "nat-gateway" {
   name                   = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  project                = "${var.project}"
   dest_range             = "0.0.0.0/0"
   network                = "${data.google_compute_network.network.self_link}"
   next_hop_instance      = "${element(split("/", element(module.nat-gateway.instances[0], 0)), 10)}"
@@ -85,6 +86,7 @@ resource "google_compute_route" "nat-gateway" {
 resource "google_compute_firewall" "nat-gateway" {
   name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network = "${var.network}"
+  project = "${var.project}"
 
   allow {
     protocol = "all"
@@ -97,4 +99,5 @@ resource "google_compute_firewall" "nat-gateway" {
 resource "google_compute_address" "default" {
   count = "${var.nat_ip == "" ? 1 : 0}"
   name = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  project = "${var.project}"
 }

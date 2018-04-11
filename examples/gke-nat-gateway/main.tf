@@ -39,7 +39,8 @@ provider google {
 }
 
 module "nat" {
-  source  = "github.com/GoogleCloudPlatform/terraform-google-nat-gateway"
+  // source  = "github.com/GoogleCloudPlatform/terraform-google-nat-gateway"
+  source  = "../../"
   region  = "${var.region}"
   zone    = "${var.zone}"
   tags    = ["${var.gke_node_tag}"]
