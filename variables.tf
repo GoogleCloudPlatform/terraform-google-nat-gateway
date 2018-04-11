@@ -89,20 +89,24 @@ variable region_params {
   type        = "map"
 
   default = {
-    us-west1 {
-      zone = "us-west1-b"
+    asia-east1 {
+      zone = "asia-east1-b"
     }
 
-    us-central1 {
-      zone = "us-central1-f"
+    asia-northeast1 {
+      zone = "asia-northeast1-b"
     }
 
-    us-east1 {
-      zone = "us-east1-b"
+    asia-south1 {
+      zone = "asia-south1-b"
     }
 
-    us-east4 {
-      zone = "us-east4-b"
+    asia-southeast1 {
+      zone = "asia-southeast1-b"
+    }
+
+    australia-southeast1 {
+      zone = "australia-southeast1-b"
     }
 
     europe-west1 {
@@ -117,28 +121,32 @@ variable region_params {
       zone = "europe-west3-b"
     }
 
-    asia-southeast1 {
-      zone = "asia-southeast1-b"
+    europe-west4 {
+      zone = "europe-west4-b"
     }
 
-    asia-east1 {
-      zone = "asia-east1-b"
-    }
-
-    asia-northeast1 {
-      zone = "asia-northeast1-b"
-    }
-
-    australia-southeast1 {
-      zone = "australia-southeast1-b"
-    }
-
-    asia-south1 {
-      zone = "asia-south1-b"
+    northamerica-northeast1 {
+      zone = "northamerica-northeast1-b"
     }
 
     southamerica-east1 {
       zone = "southamerica-east1-b"
+    }
+
+    us-central1 {
+      zone = "us-central1-f"
+    }
+
+    us-east1 {
+      zone = "us-east1-b"
+    }
+
+    us-east4 {
+      zone = "us-east4-b"
+    }
+
+    us-west1 {
+      zone = "us-west1-b"
     }
   }
 }
