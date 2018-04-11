@@ -48,6 +48,11 @@ variable name {
   default     = ""
 }
 
+variable ip_address_name {
+  description = "Name of an existing reserved external address to use."
+  default     = ""
+}
+
 variable tags {
   description = "Additional compute instance network tags to apply route to."
   type        = "list"

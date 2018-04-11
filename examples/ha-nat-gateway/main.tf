@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 variable region {
   default = "us-west1"
 }
@@ -53,4 +53,16 @@ module "mig1" {
   target_tags       = ["nat-us-west1"]
   service_port      = 80
   service_port_name = "http"
+}
+
+output "ip-nat-us-west1-a" {
+  value = "${module.nat-us-west1-a.external_ip}"
+}
+
+output "ip-nat-us-west1-b" {
+  value = "${module.nat-us-west1-b.external_ip}"
+}
+
+output "ip-nat-us-west1-c" {
+  value = "${module.nat-us-west1-c.external_ip}"
 }
