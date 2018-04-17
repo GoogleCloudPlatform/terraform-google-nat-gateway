@@ -26,7 +26,7 @@ SSH into the instance by hopping through one of the NAT gateway instances, first
 ```
 eval ssh-agent $SHELL
 ssh-add ~/.ssh/google_compute_engine
-gcloud compute ssh $(gcloud compute instances list --filter=name~nat-gateway- --limit=1 --uri) --ssh-flag="-A" -- ssh $(gcloud compute instances list --filter=name~group1- --limit=1 --format='value(name)')
+gcloud compute ssh $(gcloud compute instances list --filter=name~nat-gateway- --limit=1 --uri) --ssh-flag="-A" -- ssh $(gcloud compute instances list --filter=name~group1- --limit=1 --format='value(name)') -o StrictHostKeyChecking=no
 ```
 
 Check the external IP of the instance:

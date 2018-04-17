@@ -46,6 +46,11 @@ data "google_compute_network" "network" {
   project = "${var.network_project == "" ? var.project : var.network_project}"
 }
 
+data "google_compute_address" "default" {
+  name   = "${element(concat(google_compute_address.default.*.name, list("${var.ip_address_name}")), 0)}"
+  region = "${var.region}"
+}
+
 module "nat-gateway" {
   source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
   project           = "${var.project}"
@@ -68,7 +73,7 @@ module "nat-gateway" {
   local_cmd_create = "sleep 30"
 
   access_config = [{
-    nat_ip = "${google_compute_address.default.address}"
+    nat_ip = "${data.google_compute_address.default.address}"
   }]
 }
 
@@ -97,6 +102,8 @@ resource "google_compute_firewall" "nat-gateway" {
 }
 
 resource "google_compute_address" "default" {
+  count   = "${var.ip_address_name == "" ? 1 : 0}"
   name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   project = "${var.project}"
+  region  = "${var.region}"
 }
