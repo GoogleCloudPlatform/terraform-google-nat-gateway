@@ -130,3 +130,11 @@ module "gce-lb-http" {
     "/,http,80,10",
   ]
 }
+
+output "ip-nat-staging" {
+  value = "${module.staging-nat-gateway.external_ip}"
+}
+
+output "ip-nat-production" {
+  value = "${module.production-nat-gateway.external_ip}"
+}

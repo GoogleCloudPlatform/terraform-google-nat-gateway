@@ -17,17 +17,16 @@ This example assumes you have an existing Container Engine cluster.
 
 ### Get Master IP and Node Tags
 
-Record the target cluster name and zone:
+Record the target cluster name:
 
 ```
 CLUSTER_NAME=dev
-ZONE=us-central1-f
 ```
 
 Save the IP address of the GKE master and the node pool nework tag name to the tfvars file:
 
 ```
-echo "gke_master_ip = \"$(gcloud container clusters describe ${CLUSTER_NAME} --zone ${ZONE} --format='get(endpoint)')\"" > terraform.tfvars
+echo "gke_master_ip = \"$(gcloud container clusters list --filter="name~${CLUSTER_NAME}" --format='value("endpoint")')\"" > terraform.tfvars
 echo "gke_node_tag = \"$(gcloud compute instance-templates describe $(gcloud compute instance-templates list --filter=name~gke-${CLUSTER_NAME} --limit=1 --uri) --format='get(properties.tags.items[0])')\"" >> terraform.tfvars
 ```
 

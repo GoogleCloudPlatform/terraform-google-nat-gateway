@@ -57,3 +57,7 @@ resource "google_compute_route" "gke-master-default-gw" {
   tags             = ["${var.gke_node_tag}"]
   priority         = 700
 }
+
+output "ip-nat-gateway" {
+  value = "${module.nat.external_ip}"
+}
