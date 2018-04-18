@@ -69,3 +69,7 @@ module "gce-lb-http" {
     "/,http,80,10",
   ]
 }
+
+output "ip-nat-gateway" {
+  value = "${module.nat-gateway.external_ip}"
+}

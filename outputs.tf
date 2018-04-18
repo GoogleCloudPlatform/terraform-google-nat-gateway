@@ -24,6 +24,11 @@ output gateway_ip {
   value       = "${module.nat-gateway.network_ip}"
 }
 
+output instance {
+  description = "The self link to the NAT gateway instance."
+  value       = "${element(module.nat-gateway.instances[0], 0)}"
+}
+
 output external_ip {
   description = "The external IP address of the NAT gateway instance."
   value       = "${data.google_compute_address.default.address}"
