@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 variable gke_master_ip {
-  description = "The IP address of the GKE master"
+  description = "The IP address of the GKE master or a semicolon separated string of multiple IPs"
 }
 
 variable gke_node_tag {
@@ -50,8 +50,9 @@ module "nat" {
 // Route so that traffic to the master goes through the default gateway.
 // This fixes things like kubectl exec and logs
 resource "google_compute_route" "gke-master-default-gw" {
-  name             = "gke-master-default-gw"
-  dest_range       = "${var.gke_master_ip}"
+  count            = "${var.gke_master_ip == "" ? 0 : length(split(";", var.gke_master_ip))}"
+  name             = "gke-master-default-gw-${count.index + 1}"
+  dest_range       = "${element(split(";", replace(var.gke_master_ip, "/32", "")), count.index)}"
   network          = "${var.network}"
   next_hop_gateway = "default-internet-gateway"
   tags             = ["${var.gke_node_tag}"]
