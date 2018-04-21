@@ -40,18 +40,19 @@ provider google {
 
 module "nat" {
   // source  = "github.com/GoogleCloudPlatform/terraform-google-nat-gateway"
-  source  = "../../"
-  region  = "${var.region}"
-  zone    = "${var.zone}"
-  tags    = ["${var.gke_node_tag}"]
-  network = "${var.network}"
+  source     = "../../"
+  region     = "${var.region}"
+  zone       = "${var.zone}"
+  tags       = ["${var.gke_node_tag}"]
+  network    = "${var.network}"
+  subnetwork = "${var.network}"
 }
 
 // Route so that traffic to the master goes through the default gateway.
 // This fixes things like kubectl exec and logs
 resource "google_compute_route" "gke-master-default-gw" {
   count            = "${var.gke_master_ip == "" ? 0 : length(split(";", var.gke_master_ip))}"
-  name             = "gke-master-default-gw-${count.index + 1}"
+  name             = "${var.gke_node_tag}-master-default-gw-${count.index + 1}"
   dest_range       = "${element(split(";", replace(var.gke_master_ip, "/32", "")), count.index)}"
   network          = "${var.network}"
   next_hop_gateway = "default-internet-gateway"

@@ -24,9 +24,13 @@ terraform apply
 SSH into the instance by hopping through one of the NAT gateway instances, first make sure that SSH agent is running and your private SSH key is added to the authentication agent.
 
 ```
-eval ssh-agent $SHELL
+gcloud compute config-ssh
+eval `ssh-agent $SHELL`
 ssh-add ~/.ssh/google_compute_engine
-gcloud compute ssh $(gcloud compute instances list --filter=name~nat-gateway- --limit=1 --uri) --ssh-flag="-A" -- ssh $(gcloud compute instances list --filter=name~group1- --limit=1 --format='value(name)') -o StrictHostKeyChecking=no
+BASTION=$(terraform output -module nat-zone-1 -json | jq -r '.instance.value')
+REMOTE_HOST=$(terraform output -module mig1 -json | jq -r '.instances.value[0][0]')
+SSH_USER=$(gcloud config get-value account)
+gcloud compute ssh ${SSH_USER//@*}@${BASTION} --ssh-flag="-A" -- ssh ${REMOTE_HOST//*instances\//} -o StrictHostKeyChecking=no
 ```
 
 Check the external IP of the instance:

@@ -53,25 +53,23 @@ data "google_compute_address" "default" {
 }
 
 module "nat-gateway" {
-  source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
-  project           = "${var.project}"
-  region            = "${var.region}"
-  zone              = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  network           = "${var.network}"
-  subnetwork        = "${var.subnetwork}"
-  target_tags       = ["${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
-  machine_type      = "${var.machine_type}"
-  name              = "${var.name}nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  compute_image     = "debian-cloud/debian-8"
-  size              = 1
-  network_ip        = "${var.ip}"
-  can_ip_forward    = "true"
-  service_port      = "80"
-  service_port_name = "http"
-  startup_script    = "${data.template_file.nat-startup-script.rendered}"
-
-  // Race condition when creating route with instance in managed instance group. Wait 30 seconds for the instance to be created by the manager.
-  local_cmd_create = "sleep 30"
+  source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  project            = "${var.project}"
+  region             = "${var.region}"
+  zone               = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  network            = "${var.network}"
+  subnetwork         = "${var.subnetwork}"
+  target_tags        = ["${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
+  machine_type       = "${var.machine_type}"
+  name               = "${var.name}nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  compute_image      = "debian-cloud/debian-8"
+  size               = 1
+  network_ip         = "${var.ip}"
+  can_ip_forward     = "true"
+  service_port       = "80"
+  service_port_name  = "http"
+  startup_script     = "${data.template_file.nat-startup-script.rendered}"
+  wait_for_instances = true
 
   access_config = [
     {

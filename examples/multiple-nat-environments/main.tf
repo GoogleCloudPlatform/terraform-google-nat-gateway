@@ -18,6 +18,26 @@ variable region {
   default = "us-west1"
 }
 
+variable zone {
+  default = "us-west1-b"
+}
+
+variable staging_network_name {
+  default = "staging"
+}
+
+variable staging_mig_name {
+  default = "staging"
+}
+
+variable production_network_name {
+  default = "production"
+}
+
+variable production_mig_name {
+  default = "production"
+}
+
 provider google {
   region = "${var.region}"
 }
@@ -33,79 +53,81 @@ data "template_file" "startup-script" {
 // Staging resources
 
 resource "google_compute_network" "staging" {
-  name                    = "staging"
+  name                    = "${var.staging_network_name}"
   auto_create_subnetworks = "false"
 }
 
-resource "google_compute_subnetwork" "staging-us-west1" {
-  name          = "staging-us-west1"
-  ip_cidr_range = "10.138.0.0/20"
+resource "google_compute_subnetwork" "staging" {
+  name          = "${var.staging_network_name}"
+  ip_cidr_range = "10.137.0.0/20"
   network       = "${google_compute_network.staging.self_link}"
-  region        = "us-west1"
+  region        = "${var.region}"
 }
 
 module "staging-mig1" {
-  source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
-  region            = "us-west1"
-  zone              = "us-west1-b"
-  name              = "staging"
-  network           = "${google_compute_subnetwork.staging-us-west1.network}"
-  subnetwork        = "${google_compute_subnetwork.staging-us-west1.name}"
-  size              = 2
-  access_config     = []
-  target_tags       = ["allow-staging", "staging-nat-us-west1"]
-  service_port      = 80
-  service_port_name = "http"
-  startup_script    = "${data.template_file.startup-script.rendered}"
-  depends_id        = "${module.staging-nat-gateway.depends_id}"
+  source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  region             = "${var.region}"
+  zone               = "${var.zone}"
+  name               = "${var.staging_mig_name}"
+  network            = "${google_compute_subnetwork.staging.network}"
+  subnetwork         = "${google_compute_subnetwork.staging.name}"
+  size               = 2
+  access_config      = []
+  target_tags        = ["allow-staging", "staging-nat-${var.region}"]
+  service_port       = 80
+  service_port_name  = "http"
+  wait_for_instances = true
+  startup_script     = "${data.template_file.startup-script.rendered}"
+  depends_id         = "${module.staging-nat-gateway.depends_id}"
 }
 
 module "staging-nat-gateway" {
   // source  = "github.com/GoogleCloudPlatform/terraform-google-nat-gateway"
   source     = "../../"
   name       = "staging-"
-  region     = "us-west1"
+  region     = "${var.region}"
   network    = "${google_compute_network.staging.name}"
-  subnetwork = "${google_compute_subnetwork.staging-us-west1.name}"
+  subnetwork = "${google_compute_subnetwork.staging.name}"
 }
 
 // Production resources
 
 resource "google_compute_network" "production" {
-  name                    = "production"
+  name                    = "${var.production_network_name}"
   auto_create_subnetworks = "false"
 }
 
-resource "google_compute_subnetwork" "production-us-west1" {
-  name          = "production-us-west1"
-  ip_cidr_range = "10.138.0.0/20"
+resource "google_compute_subnetwork" "production" {
+  name          = "${var.production_network_name}"
+  ip_cidr_range = "10.137.0.0/20"
   network       = "${google_compute_network.production.self_link}"
-  region        = "us-west1"
+  region        = "${var.region}"
 }
 
 module "production-mig1" {
-  source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
-  region            = "us-west1"
-  zone              = "us-west1-b"
-  name              = "production"
-  network           = "${google_compute_subnetwork.production-us-west1.network}"
-  subnetwork        = "${google_compute_subnetwork.production-us-west1.name}"
-  size              = 2
-  access_config     = []
-  target_tags       = ["allow-production", "production-nat-us-west1"]
-  service_port      = 80
-  service_port_name = "http"
-  startup_script    = "${data.template_file.startup-script.rendered}"
-  depends_id        = "${module.production-nat-gateway.depends_id}"
+  source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  region             = "${var.region}"
+  zone               = "${var.zone}"
+  name               = "${var.production_mig_name}"
+  network            = "${google_compute_subnetwork.production.network}"
+  subnetwork         = "${google_compute_subnetwork.production.name}"
+  size               = 2
+  access_config      = []
+  target_tags        = ["allow-production", "production-nat-${var.region}"]
+  service_port       = 80
+  service_port_name  = "http"
+  wait_for_instances = true
+  startup_script     = "${data.template_file.startup-script.rendered}"
+  depends_id         = "${module.production-nat-gateway.depends_id}"
 }
 
 module "production-nat-gateway" {
   // source  = "github.com/GoogleCloudPlatform/terraform-google-nat-gateway"
   source     = "../../"
   name       = "production-"
-  region     = "us-west1"
+  region     = "${var.region}"
   network    = "${google_compute_network.production.name}"
-  subnetwork = "${google_compute_subnetwork.production-us-west1.name}"
+  subnetwork = "${google_compute_subnetwork.production.name}"
 }
 
 module "gce-lb-http" {
@@ -129,6 +151,10 @@ module "gce-lb-http" {
     // health check path, port name, port number, timeout seconds.
     "/,http,80,10",
   ]
+}
+
+output "ip-lb" {
+  value = "${module.gce-lb-http.external_ip}"
 }
 
 output "ip-nat-staging" {

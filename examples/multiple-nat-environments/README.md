@@ -24,8 +24,9 @@ terraform apply
 Open URL of load balancer in browser:
 
 ```
-EXTERNAL_IP=$(terraform output -module gce-lb-http | grep external_ip | cut -d = -f2 | xargs echo -n)
-(until curl -sf -o /dev/null http://${EXTERNAL_IP}; do echo "Waiting for Load Balancer... "; sleep 5 ; done) && open http://${EXTERNAL_IP}
+EXTERNAL_IP=$(terraform output lb-ip)
+(until curl -sf -o /dev/null http://${EXTERNAL_IP}; do echo "Waiting for Load Balancer... "; sleep 5 ; done) && \
+  open http://${EXTERNAL_IP}
 ```
 
 After refreshing several times, you will see the details of instances from the staging and production networks. The `External IP` field should match the external IP of the NAT gateway instnace in the respective network:
