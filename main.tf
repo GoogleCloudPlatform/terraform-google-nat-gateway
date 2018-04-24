@@ -47,8 +47,9 @@ data "google_compute_network" "network" {
 }
 
 data "google_compute_address" "default" {
-  name   = "${element(concat(google_compute_address.default.*.name, list("${var.ip_address_name}")), 0)}"
-  region = "${var.region}"
+  name    = "${element(concat(google_compute_address.default.*.name, list("${var.ip_address_name}")), 0)}"
+  project = "${var.network_project == "" ? var.project : var.network_project}"
+  region  = "${var.region}"
 }
 
 module "nat-gateway" {
