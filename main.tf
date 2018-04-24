@@ -73,9 +73,11 @@ module "nat-gateway" {
   // Race condition when creating route with instance in managed instance group. Wait 30 seconds for the instance to be created by the manager.
   local_cmd_create = "sleep 30"
 
-  access_config = [{
-    nat_ip = "${data.google_compute_address.default.address}"
-  }]
+  access_config = [
+    {
+      nat_ip = "${data.google_compute_address.default.address}"
+    },
+  ]
 }
 
 resource "google_compute_route" "nat-gateway" {
