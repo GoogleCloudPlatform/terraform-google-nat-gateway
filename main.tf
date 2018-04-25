@@ -47,8 +47,9 @@ data "google_compute_network" "network" {
 }
 
 data "google_compute_address" "default" {
-  name   = "${element(concat(google_compute_address.default.*.name, list("${var.ip_address_name}")), 0)}"
-  region = "${var.region}"
+  name    = "${element(concat(google_compute_address.default.*.name, list("${var.ip_address_name}")), 0)}"
+  project = "${var.network_project == "" ? var.project : var.network_project}"
+  region  = "${var.region}"
 }
 
 module "nat-gateway" {
@@ -72,9 +73,11 @@ module "nat-gateway" {
   // Race condition when creating route with instance in managed instance group. Wait 30 seconds for the instance to be created by the manager.
   local_cmd_create = "sleep 30"
 
-  access_config = [{
-    nat_ip = "${data.google_compute_address.default.address}"
-  }]
+  access_config = [
+    {
+      nat_ip = "${data.google_compute_address.default.address}"
+    },
+  ]
 }
 
 resource "google_compute_route" "nat-gateway" {
