@@ -18,51 +18,94 @@ variable region {
   default = "us-west1"
 }
 
+variable zone1 {
+  default = "us-west1-a"
+}
+
+variable zone2 {
+  default = "us-west1-b"
+}
+
+variable zone3 {
+  default = "us-west1-c"
+}
+
 provider google {
   region = "${var.region}"
 }
 
-module "nat-us-west1-a" {
-  source  = "../../"
-  region  = "us-west1"
-  zone    = "us-west1-a"
-  network = "default"
+variable network_name {
+  default = "ha-nat-example"
 }
 
-module "nat-us-west1-b" {
-  source  = "../../"
-  region  = "us-west1"
-  zone    = "us-west1-b"
-  network = "default"
+resource "google_compute_network" "default" {
+  name                    = "${var.network_name}"
+  auto_create_subnetworks = "false"
 }
 
-module "nat-us-west1-c" {
-  source  = "../../"
-  region  = "us-west1"
-  zone    = "us-west1-c"
-  network = "default"
+resource "google_compute_subnetwork" "default" {
+  name                     = "${var.network_name}"
+  ip_cidr_range            = "10.127.0.0/20"
+  network                  = "${google_compute_network.default.self_link}"
+  region                   = "${var.region}"
+  private_ip_google_access = true
+}
+
+module "nat-zone-1" {
+  source     = "../../"
+  region     = "${var.region}"
+  zone       = "${var.zone1}"
+  network    = "${google_compute_subnetwork.default.name}"
+  subnetwork = "${google_compute_subnetwork.default.name}"
+}
+
+module "nat-zone-2" {
+  source     = "../../"
+  region     = "${var.region}"
+  zone       = "${var.zone2}"
+  network    = "${google_compute_subnetwork.default.name}"
+  subnetwork = "${google_compute_subnetwork.default.name}"
+}
+
+module "nat-zone-3" {
+  source     = "../../"
+  region     = "${var.region}"
+  zone       = "${var.zone3}"
+  network    = "${google_compute_subnetwork.default.name}"
+  subnetwork = "${google_compute_subnetwork.default.name}"
 }
 
 module "mig1" {
-  source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
-  region            = "us-west1"
-  zone              = "us-west1-b"
-  name              = "group1"
-  size              = 2
-  access_config     = []
-  target_tags       = ["nat-us-west1"]
-  service_port      = 80
-  service_port_name = "http"
+  source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  region             = "${var.region}"
+  zone               = "${var.zone1}"
+  name               = "ha-nat-mig"
+  size               = 2
+  access_config      = []
+  target_tags        = ["nat-${var.region}"]
+  service_port       = 80
+  service_port_name  = "http"
+  network            = "${google_compute_subnetwork.default.name}"
+  subnetwork         = "${google_compute_subnetwork.default.name}"
+  wait_for_instances = true
 }
 
-output "ip-nat-us-west1-a" {
-  value = "${module.nat-us-west1-a.external_ip}"
+output "nat-host" {
+  value = "${module.nat-zone-1.instance}"
 }
 
-output "ip-nat-us-west1-b" {
-  value = "${module.nat-us-west1-b.external_ip}"
+output "remote-host-uri" {
+  value = "${element(module.mig1.instances[0], 0)}"
 }
 
-output "ip-nat-us-west1-c" {
-  value = "${module.nat-us-west1-c.external_ip}"
+output "ip-nat-zone-1" {
+  value = "${module.nat-zone-1.external_ip}"
+}
+
+output "ip-nat-zone-2" {
+  value = "${module.nat-zone-2.external_ip}"
+}
+
+output "ip-nat-zone-3" {
+  value = "${module.nat-zone-3.external_ip}"
 }
