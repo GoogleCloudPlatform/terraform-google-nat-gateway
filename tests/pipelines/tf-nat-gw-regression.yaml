@@ -26,8 +26,8 @@ resources:
 - name: terraform-google-nat-gateway
   type: git
   source:
-    uri: https://github.com/danisla/terraform-google-nat-gateway.git
-    branch: regression-tests
+    uri: https://github.com/GoogleCloudPlatform/terraform-google-nat-gateway.git
+    branch: master
 - name: terraform
   type: terraform
   source:
