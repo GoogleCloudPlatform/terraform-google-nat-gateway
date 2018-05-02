@@ -20,14 +20,14 @@ resource_types:
 - name: terraform
   type: docker-image
   source:
-    repository: ljfranklin/terraform-resource
-    tag: beta-backend
+    repository: gcr.io/cloud-solutions-group/terraform-resource
+    tag: latest
 resources:
 - name: terraform-google-nat-gateway
   type: git
   source:
-    uri: https://github.com/GoogleCloudPlatform/terraform-google-nat-gateway.git
-    branch: master
+    uri: {{tf_nat_gw_source_repo}}
+    branch: {{tf_nat_gw_source_branch}}
 - name: terraform
   type: terraform
   source:
