@@ -150,3 +150,8 @@ variable region_params {
     }
   }
 }
+
+variable "compute_image" {
+  description = "Image used for NAT compute VMs."
+  default     = "debian-cloud/debian-8"
+}
