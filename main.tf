@@ -32,7 +32,7 @@ ENABLE_SQUID="${var.squid_enabled}"
 if [[ "$ENABLE_SQUID" == "true" ]]; then
   apt-get install -y squid3
 
-  cat - > /etc/squid3/squid.conf <<'EOM'
+  cat - > /etc/squid/squid.conf <<'EOM'
 ${file("${var.squid_config == "" ? "${format("%s/config/squid.conf", path.module)}" : var.squid_config}")}
 EOM
 
