@@ -71,6 +71,8 @@ module "nat-gateway" {
   startup_script     = "${data.template_file.nat-startup-script.rendered}"
   wait_for_instances = true
 
+  metadata = "${var.metadata}"
+
   access_config = [
     {
       nat_ip = "${data.google_compute_address.default.address}"
