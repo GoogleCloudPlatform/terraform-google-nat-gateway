@@ -6,6 +6,8 @@ This example creates a NAT Gateway and Compute Engine Network Routes to route ou
 
 ![architecture diagram](./diagram.png)
 
+> Note: This example only deploys a single-node NAT gateway instance and is not intended for production use. See the [ha-natgateway](../ha-nat-gateway) example for a highly available option.
+
 ## Setup Environment
 
 ```
