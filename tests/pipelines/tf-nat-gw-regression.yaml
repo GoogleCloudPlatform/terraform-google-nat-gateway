@@ -17,30 +17,12 @@ resource_types:
   type: docker-image
   source:
     repository: pcfseceng/email-resource
-- name: terraform
-  type: docker-image
-  source:
-    repository: gcr.io/cloud-solutions-group/terraform-resource
-    tag: latest
 resources:
 - name: terraform-google-nat-gateway
   type: git
   source:
     uri: {{tf_nat_gw_source_repo}}
     branch: {{tf_nat_gw_source_branch}}
-- name: terraform
-  type: terraform
-  source:
-    storage:
-      driver: s3
-      bucket: {{tf_backend_bucket}}
-      bucket_path: terraform-google-nat-gateway/
-      access_key_id: {{s3_compatible_access_key}}
-      secret_access_key: {{s3_compatible_secret_key}}
-      endpoint: https://storage.googleapis.com
-    env:
-      GOOGLE_PROJECT: {{project_id}}
-      GOOGLE_CREDENTIALS: {{service_account_json}}
 - name: once-a-day
   type: time
   source:
@@ -94,25 +76,13 @@ jobs:
   - get: terraform-google-nat-gateway
     trigger: false
 
-  - put: terraform
-    params:
-      action: update
-      env_name: tf-nat-gke-zonal
-      delete_on_failure: true
-      terraform_source: terraform-google-nat-gateway/tests/infra/example-gke-nat-gateway-zonal
-      vars:
-        region: us-west1
-        zone: us-west1-b
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform infra apply failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform infra apply failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
-
   - task: run-example-gke-zonal
     params:
       service_account_json: {{service_account_json}}
       project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-zonal
       region: us-west1
       zone: us-west1-b
     on_failure:
@@ -121,19 +91,6 @@ jobs:
         subject: email/subject-failed
         body: email/body-failed
     file: terraform-google-nat-gateway/tests/tasks/example-gke-nat-gateway-zonal.yaml
-  
-  - put: terraform
-    get_params:
-      action: destroy
-    params:
-      action: destroy
-      env_name: tf-nat-gke-zonal
-      terraform_source: terraform-google-nat-gateway/tests/infra/example-gke-nat-gateway-zonal
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform infra destroy failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform infra destroy failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
 
 ###
 # run-example-gke-regional
@@ -147,25 +104,13 @@ jobs:
   - get: terraform-google-nat-gateway
     trigger: false
 
-  - put: terraform
-    params:
-      action: update
-      env_name: tf-nat-gke-regional
-      delete_on_failure: true
-      terraform_source: terraform-google-nat-gateway/tests/infra/example-gke-nat-gateway-regional
-      vars:
-        region: us-central1
-        zone: us-central1-f
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform infra apply failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform infra apply failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
-
   - task: run-example-gke-regional
     params:
       service_account_json: {{service_account_json}}
       project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-regional
       region: us-central1
       zone: us-central1-f
     on_failure:
@@ -174,19 +119,6 @@ jobs:
         subject: email/subject-failed
         body: email/body-failed
     file: terraform-google-nat-gateway/tests/tasks/example-gke-nat-gateway-regional.yaml
-  
-  - put: terraform
-    get_params:
-      action: destroy
-    params:
-      action: destroy
-      env_name: tf-nat-gke-regional
-      terraform_source: terraform-google-nat-gateway/tests/infra/example-gke-nat-gateway-regional
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform infra destroy failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform infra destroy failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
 
 ###
 # run-example-gke-private
@@ -200,25 +132,13 @@ jobs:
   - get: terraform-google-nat-gateway
     trigger: false
 
-  - put: terraform
-    params:
-      action: update
-      env_name: tf-nat-gke-private
-      delete_on_failure: true
-      terraform_source: terraform-google-nat-gateway/tests/infra/example-gke-nat-gateway-private
-      vars:
-        region: us-east1
-        zone: us-east1-b
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform infra apply failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform infra apply failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
-
   - task: run-example-gke-private
     params:
       service_account_json: {{service_account_json}}
       project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-private
       region: us-east1
       zone: us-east1-b
     on_failure:
@@ -228,19 +148,6 @@ jobs:
         body: email/body-failed
     file: terraform-google-nat-gateway/tests/tasks/example-gke-nat-gateway-private.yaml
   
-  - put: terraform
-    get_params:
-      action: destroy
-    params:
-      action: destroy
-      env_name: tf-nat-gke-private
-      terraform_source: terraform-google-nat-gateway/tests/infra/example-gke-nat-gateway-private
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform infra destroy failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform infra destroy failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
-
 ###
 # run-example-ha-nat-gateway
 ###
@@ -253,49 +160,24 @@ jobs:
   - get: terraform-google-nat-gateway
     trigger: false
 
-  - put: terraform
-    params:
-      action: update
-      env_name: tf-nat-ha
-      delete_on_failure: true
-      terraform_source: terraform-google-nat-gateway/examples/ha-nat-gateway
-      vars:
-        network_name: tf-ci-ha-nat
-        region: us-east4
-        zone1: us-east4-a
-        zone2: us-east4-b
-        zone3: us-east4-c
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform example apply failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform example apply failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
- 
   - task: test-example-ha-nat
     params:
       service_account_json: {{service_account_json}}
       project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-ha
       region: us-east4
       zone: us-east4-a
+      zone1: us-east4-a
+      zone2: us-east4-b
+      zone3: us-east4-c
     on_failure:
       put: send-an-email
       params:
         subject: email/subject-failed
         body: email/body-failed
     file: terraform-google-nat-gateway/tests/tasks/example-ha-nat-gateway.yaml
-
-  - put: terraform
-    get_params:
-      action: destroy
-    params:
-      action: destroy
-      env_name: tf-nat-ha
-      terraform_source: terraform-google-nat-gateway/examples/ha-nat-gateway
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform example destroy failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform example destroy failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
 
 ###
 # run-example-lb-nat-gateway
@@ -309,42 +191,21 @@ jobs:
   - get: terraform-google-nat-gateway
     trigger: false
   
-  - put: terraform
-    params:
-      action: update
-      env_name: tf-nat-lb
-      delete_on_failure: true
-      terraform_source: terraform-google-nat-gateway/examples/lb-http-nat-gateway
-      vars:
-        network_name: tf-ci-lb-nat
-        region: europe-west1
-        zone: europe-west1-b
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform example apply failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform example apply failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
- 
   - task: test-example-lb-nat
+    params:
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-lb
+      region: europe-west1
+      zone: europe-west1-b
     on_failure:
       put: send-an-email
       params:
         subject: email/subject-failed
         body: email/body-failed
     file: terraform-google-nat-gateway/tests/tasks/example-lb-nat-gateway.yaml
-
-  - put: terraform
-    get_params:
-      action: destroy
-    params:
-      action: destroy
-      env_name: tf-nat-lb
-      terraform_source: terraform-google-nat-gateway/examples/lb-http-nat-gateway
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform example destroy failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform example destroy failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
 
 ###
 # run-example-multi-env
@@ -358,42 +219,22 @@ jobs:
   - get: terraform-google-nat-gateway
     trigger: false
   
-  - put: terraform
-    params:
-      action: update
-      env_name: tf-nat-multi-env
-      delete_on_failure: true
-      terraform_source: terraform-google-nat-gateway/examples/multiple-nat-environments
-      vars:
-        production_network_name: tf-ci-multi-nat-production
-        production_mig_name: tf-ci-multi-nat-env-prod
-        staging_network_name: tf-ci-multi-nat-staging
-        staging_mig_name: tf-ci-multi-nat-env-staging
-        region: europe-west2
-        zone: europe-west2-b
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform example apply failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform example apply failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"
- 
   - task: test-example-nat-multi-env
+    params:
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-multi-env
+      production_network_name: tf-ci-multi-nat-production
+      production_mig_name: tf-ci-multi-nat-env-prod
+      staging_network_name: tf-ci-multi-nat-staging
+      staging_mig_name: tf-ci-multi-nat-env-staging
+      region: europe-west2
+      zone: europe-west2-b
     on_failure:
       put: send-an-email
       params:
         subject: email/subject-failed
         body: email/body-failed
     file: terraform-google-nat-gateway/tests/tasks/example-multi-env.yaml
-
-  - put: terraform
-    get_params:
-      action: destroy
-    params:
-      action: destroy
-      env_name: tf-nat-multi-env
-      terraform_source: terraform-google-nat-gateway/examples/multiple-nat-environments
-    on_failure:
-      put: send-an-email
-      params:
-        subject_text: "Terraform example destroy failed: ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}/${BUILD_NAME}"
-        body_text: "Terraform example destroy failed: ${ATC_EXTERNAL_URL}/teams/main/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}"

@@ -2,10 +2,9 @@
 
 PROJECT=$(cat ~/.secrets.yaml | egrep '^project_id:' | cut -d' ' -f2)
 BUCKET=$(cat ~/.secrets.yaml | egrep '^tf_backend_bucket:' | cut -d' ' -f2)
-PREFIX=$(cat ~/.secrets.yaml | egrep '^tf_backend_path:' | cut -d' ' -f2)
 ACCESS_KEY=$(cat ~/.secrets.yaml | egrep '^s3_compatible_access_key:' | cut -d' ' -f2)
 SECRET_KEY=$(cat ~/.secrets.yaml | egrep '^s3_compatible_secret_key:' | cut -d' ' -f2)
-CMD="gsutil ls -p ${PROJECT} gs://${BUCKET}/${PREFIX}*.tfstate"
+CMD="gsutil ls -p ${PROJECT} gs://${BUCKET}/*/*.tfstate"
 
 function list-tf-states() {
   CMD=$1
@@ -27,6 +26,7 @@ function list-tf-states() {
 
 STATEFILE=$(list-tf-states "$CMD")
 KEY="${STATEFILE//*${BUCKET}\/}"
+PREFIX=$(dirname $KEY)
 WORKSPACE=$(basename $KEY .tfstate)
 
 cat > backend.tf <<EOF

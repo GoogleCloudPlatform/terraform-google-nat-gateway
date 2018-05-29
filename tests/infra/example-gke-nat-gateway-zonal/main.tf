@@ -23,7 +23,7 @@ variable zone {
 }
 
 variable network_name {
-  default = "tf-regression"
+  default = "tf-ci-nat-gke-zonal"
 }
 
 data "google_client_config" "current" {}
@@ -37,12 +37,12 @@ data "google_container_engine_versions" "default" {
 }
 
 resource "google_compute_network" "tf-ci" {
-  name                    = "tf-ci-nat-gke-zonal"
+  name                    = "${var.network_name}"
   auto_create_subnetworks = "false"
 }
 
 resource "google_compute_subnetwork" "tf-ci" {
-  name                     = "tf-ci-nat-gke-zonal"
+  name                     = "${var.network_name}"
   ip_cidr_range            = "10.127.0.0/20"
   network                  = "${google_compute_network.tf-ci.self_link}"
   region                   = "${var.region}"

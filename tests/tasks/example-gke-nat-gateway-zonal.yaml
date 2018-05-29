@@ -15,17 +15,19 @@
 platform: linux
 inputs:
 - name: terraform-google-nat-gateway
-- name: terraform
 outputs:
 - name: email
 image_resource:
   type: docker-image
   source:
     repository: google/cloud-sdk
-    tag: latest
+    tag: alpine
 params:
   service_account_json:
   project_id:
+  backend_bucket:
+  backend_prefix:
+  env_name:
   region:
   zone:
 run:
@@ -38,20 +40,21 @@ run:
     cat > ${SA_JSON} <<EOF
     $service_account_json
     EOF
-    apt-get install -y git openssl jq unzip curl
+    apk add --update jq curl
     gcloud auth activate-service-account --key-file=${SA_JSON}
     gcloud config set project $project_id
     gcloud config set compute/zone $zone
+    echo "y" | gcloud components install kubectl
 
     cd terraform-google-nat-gateway
 
     # Setup email
     EMAIL=${PWD}/../email
-    echo "terraform-google-nat-gateway/example-gke-nat-gateway-zonal: Failed to run example" > ${EMAIL}/subject-failed
+    echo "terraform-google-nat-gateway/${env_name}: Failed to run example" > ${EMAIL}/subject-failed
     git --no-pager show > ${EMAIL}/body-failed
 
     # Install latest terraform
-    curl -sL https://goo.gl/yZS5XU | bash
+    curl -sL 	https://goo.gl/UYp3WG | bash
     source ${HOME}/.bashrc
     terraform version
 
@@ -59,24 +62,52 @@ run:
     export GOOGLE_APPLICATION_CREDENTIALS=${SA_JSON}
     export GOOGLE_PROJECT=$project_id
 
-    ### Begin Terraform example test
-    BASE_DIR=${PWD}/examples/gke-nat-gateway
+    BASE_DIR=${PWD}
+    INFRA_DIR=""
+    TEST_DIR=""
 
     function cleanup {
-      cd ${BASE_DIR}/ && terraform destroy -input=false -auto-approve
+      for d in ${TEST_DIR} ${INFRA_DIR}; do
+        cd ${d}/ && terraform destroy -input=false -lock=false -auto-approve
+      done
     }
     trap cleanup EXIT
 
-    # Extract params from terraform metadata
-    TF_METADATA=$(cat ../terraform/metadata)
-    
-    NETWORK=$(jq -e -r '.subnetwork_name' <<<${TF_METADATA})
-    REGION=$(jq -e -r '.cluster_region' <<<${TF_METADATA})
-    ZONE=$(jq -e -r '.cluster_zone' <<<${TF_METADATA})
-    CLUSTER_NAME=$(jq -e -r '.cluster_name' <<<${TF_METADATA})
+    ### Apply test infrastructure
+    INFRA_DIR=${BASE_DIR}/tests/infra/example-gke-nat-gateway-zonal
+
+    cd ${INFRA_DIR}
+
+    cat > terraform.tfvars <<EOF
+    region = "$region"
+    zone = "$zone"
+    network_name = "$env_name"
+    EOF
+
+    cat > backend.tf <<EOF
+    terraform {
+      backend "gcs" {
+        bucket     = "${backend_bucket}"
+        prefix     = "${backend_prefix}"
+      }
+    }
+    EOF
+
+    terraform init -upgrade=true
+    terraform workspace select ${env_name}-infra || terraform workspace new ${env_name}-infra 
+    terraform apply -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
+
+    ### Begin Terraform example test
+    TEST_DIR=${BASE_DIR}/examples/gke-nat-gateway
+
+    # Extract params from terraform outputs
+    NETWORK=$(terraform output subnetwork_name)
+    REGION=$(terraform output cluster_region)
+    ZONE=$(terraform output cluster_zone)
+    CLUSTER_NAME=$(terraform output cluster_name)
 
     # Change to example directory
-    cd examples/gke-nat-gateway
+    cd ${TEST_DIR}
 
     # Generate terraform.tfvars
     NODE_TAG=$(gcloud compute instance-templates describe $(gcloud compute instance-templates list --filter=name~gke-${CLUSTER_NAME} --limit=1 --uri) --format='get(properties.tags.items[0])')
@@ -91,13 +122,24 @@ run:
     gke_master_ip = "${MASTER_IP}"
     gke_node_tag  = "${NODE_TAG}"
     EOF
+
+    cat > backend.tf <<EOF
+    terraform {
+      backend "gcs" {
+        bucket     = "${backend_bucket}"
+        prefix     = "${backend_prefix}"
+      }
+    }
+    EOF
     
     # Run Terraform
     terraform init -upgrade=true
+    terraform workspace select ${env_name} || terraform workspace new ${env_name}
     terraform plan
-    terraform apply -input=false -auto-approve | tee ${EMAIL}/body-failed
+    terraform apply -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
 
     # Test NAT Gateway
+    echo "" > ${EMAIL}/body-failed
     gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${ZONE}
     NAT_IP=$(terraform output ip-nat-gateway)
     count=0

@@ -22,6 +22,10 @@ variable zone {
   default = "us-east4-b"
 }
 
+variable network_name {
+  default = "tf-ci-nat-gke-private"
+}
+
 data "google_client_config" "current" {}
 
 provider google {
@@ -33,12 +37,12 @@ data "google_container_engine_versions" "default" {
 }
 
 resource "google_compute_network" "tf-ci" {
-  name                    = "tf-ci-nat-gke-private"
+  name                    = "${var.network_name}"
   auto_create_subnetworks = "false"
 }
 
 resource "google_compute_subnetwork" "tf-ci" {
-  name                     = "tf-ci-nat-gke-private"
+  name                     = "${var.network_name}"
   ip_cidr_range            = "10.127.0.0/20"
   network                  = "${google_compute_network.tf-ci.self_link}"
   region                   = "${var.region}"
@@ -50,7 +54,7 @@ resource "random_id" "id" {
 }
 
 resource "google_compute_subnetwork" "tf-ci-gke-private" {
-  name                     = "gke-tf-ci-private-cluster-${random_id.id.hex}"
+  name                     = "${var.network_name}-cluster-${random_id.id.hex}"
   ip_cidr_range            = "10.0.0.0/22"
   network                  = "${google_compute_network.tf-ci.self_link}"
   region                   = "${var.region}"
@@ -58,11 +62,11 @@ resource "google_compute_subnetwork" "tf-ci-gke-private" {
 
   secondary_ip_range = [
     {
-      range_name    = "gke-tf-ci-private-pods-${random_id.id.hex}"
+      range_name    = "${var.network_name}-pods-${random_id.id.hex}"
       ip_cidr_range = "10.40.0.0/14"
     },
     {
-      range_name    = "gke-tf-ci-private-services-${random_id.id.hex}"
+      range_name    = "${var.network_name}-services-${random_id.id.hex}"
       ip_cidr_range = "10.0.16.0/20"
     },
   ]
@@ -85,8 +89,8 @@ resource "google_container_cluster" "tf-ci" {
   }
 
   ip_allocation_policy = {
-    cluster_secondary_range_name  = "gke-tf-ci-private-pods-${random_id.id.hex}"
-    services_secondary_range_name = "gke-tf-ci-private-services-${random_id.id.hex}"
+    cluster_secondary_range_name  = "${var.network_name}-pods-${random_id.id.hex}"
+    services_secondary_range_name = "${var.network_name}-services-${random_id.id.hex}"
   }
 
   min_master_version = "${data.google_container_engine_versions.default.latest_node_version}"

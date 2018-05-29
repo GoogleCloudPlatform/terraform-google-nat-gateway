@@ -15,7 +15,6 @@
 platform: linux
 inputs:
 - name: terraform-google-nat-gateway
-- name: terraform
 outputs:
 - name: email
 image_resource:
@@ -23,27 +22,80 @@ image_resource:
   source:
     repository: google/cloud-sdk
     tag: alpine
+params:
+  service_account_json:
+  project_id:
+  backend_bucket:
+  backend_prefix:
+  env_name:
+  region:
+  zone:
 run:
   path: bash
   args:
   - -exc
   - |
     set -o pipefail
-    apk add --update jq
+    SA_JSON=${PWD}/service_account.json
+    cat > ${SA_JSON} <<EOF
+    $service_account_json
+    EOF
+    apk add --update jq curl
+    gcloud auth activate-service-account --key-file=${SA_JSON}
+    gcloud config set project $project_id
+    gcloud config set compute/zone $zone
 
     cd terraform-google-nat-gateway
 
     # Setup email
     EMAIL=${PWD}/../email
-    echo "terraform-google-nat-gateway/example-lb-nat-gateway: Failed to run example" > ${EMAIL}/subject-failed
+    echo "terraform-google-nat-gateway/${env_name}: Failed to run example" > ${EMAIL}/subject-failed
     git --no-pager show > ${EMAIL}/body-failed
 
+    # Env for terraform google provider
+    export GOOGLE_APPLICATION_CREDENTIALS=${SA_JSON}
+    export GOOGLE_PROJECT=$project_id
+
+    # Install latest terraform
+    curl -sL 	https://goo.gl/UYp3WG | bash
+    source ${HOME}/.bashrc
+    terraform version
+
+    BASE_DIR=${PWD}
+    TEST_DIR=${BASE_DIR}/examples/lb-http-nat-gateway
+
+    function cleanup {
+      cd ${TEST_DIR}/ && terraform destroy -input=false -lock=false -auto-approve
+    }
+    trap cleanup EXIT
+
     ### Begin Terraform example test
-    METADATA=${PWD}/../terraform/metadata
-    cd examples/lb-http-nat-gateway
+    cd ${TEST_DIR}
+
+    # Generate terraform.tfvars
+    cat > terraform.tfvars <<EOF
+    region       = "${region}"
+    network_name = "${env_name}"
+    zone        = "${zone}"
+    EOF
+
+    cat > backend.tf <<EOF
+    terraform {
+      backend "gcs" {
+        bucket     = "${backend_bucket}"
+        prefix     = "${backend_prefix}"
+      }
+    }
+    EOF
+    
+    # Run Terraform
+    terraform init -upgrade=true
+    terraform workspace select ${env_name} || terraform workspace new ${env_name}
+    terraform plan
+    terraform apply -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
 
     # Test NAT Gateway
     echo "" > ${EMAIL}/body-failed
-    export NAT_IP=$(jq -r '."ip-nat-gateway"' ${METADATA})
-    export LB_IP=$(jq -r '."ip-lb"' ${METADATA})
+    export NAT_IP=$(terraform output ip-nat-gateway)
+    export LB_IP=$(terraform output ip-lb)
     bash -xe ./test.sh | tee ${EMAIL}/body-failed

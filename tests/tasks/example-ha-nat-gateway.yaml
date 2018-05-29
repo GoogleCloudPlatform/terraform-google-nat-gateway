@@ -15,7 +15,6 @@
 platform: linux
 inputs:
 - name: terraform-google-nat-gateway
-- name: terraform
 outputs:
 - name: email
 image_resource:
@@ -26,8 +25,14 @@ image_resource:
 params:
   service_account_json:
   project_id:
+  backend_bucket:
+  backend_prefix:
+  env_name:
   region:
   zone:
+  zone1:
+  zone2:
+  zone3:
 run:
   path: bash
   args:
@@ -38,7 +43,7 @@ run:
     cat > ${SA_JSON} <<EOF
     $service_account_json
     EOF
-    apk add --update jq 
+    apk add --update jq curl
     gcloud auth activate-service-account --key-file=${SA_JSON}
     gcloud config set project $project_id
     gcloud config set compute/zone $zone
@@ -47,22 +52,59 @@ run:
 
     # Setup email
     EMAIL=${PWD}/../email
-    echo "terraform-google-nat-gateway/example-ha-nat-gateway: Failed to run example" > ${EMAIL}/subject-failed
+    echo "terraform-google-nat-gateway/${env_name}: Failed to run example" > ${EMAIL}/subject-failed
     git --no-pager show > ${EMAIL}/body-failed
 
     # Env for terraform google provider
     export GOOGLE_APPLICATION_CREDENTIALS=${SA_JSON}
     export GOOGLE_PROJECT=$project_id
 
-    ### Begin Terraform example test
-    METADATA=${PWD}/../terraform/metadata
-    cd examples/ha-nat-gateway
+    # Install latest terraform
+    curl -sL 	https://goo.gl/UYp3WG | bash
+    source ${HOME}/.bashrc
+    terraform version
 
-    export NAT_HOST=$(jq -r '."nat-host"' ${METADATA})
-    export REMOTE_HOST_URI=$(jq -r '."remote-host-uri"' ${METADATA})
-    export EXTERNAL_IP_1=$(jq -r '."ip-nat-zone-1"' ${METADATA})
-    export EXTERNAL_IP_2=$(jq -r '."ip-nat-zone-2"' ${METADATA})
-    export EXTERNAL_IP_3=$(jq -r '."ip-nat-zone-3"' ${METADATA})
+    BASE_DIR=${PWD}
+    TEST_DIR=${BASE_DIR}/examples/ha-nat-gateway
+
+    function cleanup {
+      cd ${TEST_DIR}/ && terraform destroy -input=false -lock=false -auto-approve
+    }
+    trap cleanup EXIT
+
+    ### Begin Terraform example test
+    cd ${TEST_DIR}
+
+    # Generate terraform.tfvars
+
+    cat > terraform.tfvars <<EOF
+    region       = "${region}"
+    network_name = "${env_name}"
+    zone1        = "${zone1}"
+    zone2        = "${zone2}"
+    zone3        = "${zone3}"
+    EOF
+
+    cat > backend.tf <<EOF
+    terraform {
+      backend "gcs" {
+        bucket     = "${backend_bucket}"
+        prefix     = "${backend_prefix}"
+      }
+    }
+    EOF
+    
+    # Run Terraform
+    terraform init -upgrade=true
+    terraform workspace select ${env_name} || terraform workspace new ${env_name}
+    terraform plan
+    terraform apply -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
+
+    export NAT_HOST=$(terraform output nat-host)
+    export REMOTE_HOST_URI=$(terraform output remote-host-uri)
+    export EXTERNAL_IP_1=$(terraform output ip-nat-zone-1)
+    export EXTERNAL_IP_2=$(terraform output ip-nat-zone-2)
+    export EXTERNAL_IP_3=$(terraform output ip-nat-zone-3)
     
     # Test NAT Gateway
     echo "" > ${EMAIL}/body-failed
