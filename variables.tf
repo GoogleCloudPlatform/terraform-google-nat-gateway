@@ -64,6 +64,11 @@ variable route_priority {
   default     = 800
 }
 
+variable destination_range {
+  description = "Destination range for NAT gateway."
+  default = "0.0.0.0/0"
+}
+
 variable machine_type {
   description = "The machine type for the NAT gateway instance"
   default     = "n1-standard-1"
