@@ -2,6 +2,9 @@
 
 Modular NAT Gateway on Google Compute Engine for Terraform.
 
+<a href="https://concourse-tf.gcp.solutions/teams/main/pipelines/tf-nat-gw-regression" target="_blank">
+<img src="https://concourse-tf.gcp.solutions/api/v1/teams/main/pipelines/tf-nat-gw-regression/badge" /></a>
+        
 ## Usage
 
 ```ruby
