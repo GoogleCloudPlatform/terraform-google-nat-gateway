@@ -1,0 +1,432 @@
+# Copyright 2017 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+ 
+jobs:
+
+###
+# run-example-gke-zonal-pr
+###
+- name: run-example-gke-zonal-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+
+  - task: run-example-gke-zonal-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-zonal-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: git/tests/infra/example-gke-nat-gateway-zonal
+      region: us-east4
+      zone: us-east4-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-nat-gateway-zonal.yaml
+
+  - task: run-example-gke-zonal-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-zonal-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: git/tests/infra/example-gke-nat-gateway-zonal
+      region: us-east4
+      zone: us-east4-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-nat-gateway-zonal.yaml
+
+###
+# run-example-gke-regional-pr
+###
+- name: run-example-gke-regional-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+
+  - task: run-example-gke-regional-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-regional-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: git/tests/infra/example-gke-nat-gateway-regional
+      region: us-east4
+      zone: us-east4-c
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-nat-gateway-regional.yaml
+  
+  - task: run-example-gke-regional-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-regional-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: git/tests/infra/example-gke-nat-gateway-regional
+      region: us-east4
+      zone: us-east4-c
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-nat-gateway-regional.yaml
+
+###
+# run-example-gke-private-pr
+###
+- name: run-example-gke-private-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+
+  - task: run-example-gke-private-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-private-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: git/tests/infra/example-gke-nat-gateway-private
+      region: us-west1
+      zone: us-west1-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-nat-gateway-private.yaml
+  
+  - task: run-example-gke-private-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-private-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: git/tests/infra/example-gke-nat-gateway-private
+      region: us-west1
+      zone: us-west1-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-nat-gateway-private.yaml
+
+###
+# run-example-ha-nat-gateway-pr
+###
+- name: run-example-ha-nat-gateway-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+
+  - task: test-example-ha-nat-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-ha-pr
+      example_dir: examples/ha-nat-gateway
+      zone: us-central1-a
+      TF_VAR_network_name: tf-ci-nat-ha-pr
+      TF_VAR_region: us-central1
+      TF_VAR_zone1: us-central1-a
+      TF_VAR_zone2: us-central1-b
+      TF_VAR_zone3: us-central1-c
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-ha-nat-gateway.yaml
+  
+  - task: test-example-ha-nat-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-ha-pr
+      example_dir: examples/ha-nat-gateway
+      zone: us-central1-a
+      TF_VAR_network_name: tf-ci-nat-ha-pr
+      TF_VAR_region: us-central1
+      TF_VAR_zone1: us-central1-a
+      TF_VAR_zone2: us-central1-b
+      TF_VAR_zone3: us-central1-c
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-ha-nat-gateway.yaml
+
+###
+# run-example-lb-nat-gateway-pr
+###
+- name: run-example-lb-nat-gateway-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+  
+  - task: test-example-lb-nat-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-lb-pr
+      example_dir: examples/lb-http-nat-gateway
+      zone: europe-west2-b
+      TF_VAR_network_name: tf-ci-nat-lb-pr
+      TF_VAR_region: europe-west2
+      TF_VAR_zone: europe-west2-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-lb-nat-gateway.yaml
+  
+  - task: test-example-lb-nat-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-lb-pr
+      example_dir: examples/lb-http-nat-gateway
+      zone: europe-west2-b
+      TF_VAR_network_name: tf-ci-nat-lb-pr
+      TF_VAR_region: europe-west2
+      TF_VAR_zone: europe-west2-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-lb-nat-gateway.yaml
+
+###
+# run-example-multi-env-pr
+###
+- name: run-example-multi-env-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+  
+  - task: test-example-nat-multi-env-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-multi-env-pr
+      example_dir: examples/multiple-nat-environments
+      zone: europe-west3-b
+      TF_VAR_production_network_name: tf-ci-multi-nat-production-pr
+      TF_VAR_production_mig_name: tf-ci-multi-nat-env-prod-pr
+      TF_VAR_staging_network_name: tf-ci-multi-nat-staging-pr
+      TF_VAR_staging_mig_name: tf-ci-multi-nat-env-staging-pr
+      TF_VAR_region: europe-west3
+      TF_VAR_zone: europe-west3-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-multi-env.yaml
+
+  - task: test-example-nat-multi-env-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-multi-env-pr
+      example_dir: examples/multiple-nat-environments
+      zone: europe-west3-b
+      TF_VAR_production_network_name: tf-ci-multi-nat-production-pr
+      TF_VAR_production_mig_name: tf-ci-multi-nat-env-prod-pr
+      TF_VAR_staging_network_name: tf-ci-multi-nat-staging-pr
+      TF_VAR_staging_mig_name: tf-ci-multi-nat-env-staging-pr
+      TF_VAR_region: europe-west3
+      TF_VAR_zone: europe-west3-b
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-multi-env.yaml
+
+###
+# Updates PR with Passed state if all jobs pass
+###
+- name: update-pr-passed
+  plan:
+  - get: git-pull-requests
+    passed:
+    - run-example-gke-zonal-pr
+    - run-example-gke-private-pr
+    - run-example-gke-regional-pr
+    - run-example-ha-nat-gateway-pr
+    - run-example-lb-nat-gateway-pr
+    - run-example-multi-env-pr
+    trigger: true
+    version: every
+
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: success
+
+###
+# Resource types
+###
+resource_types:
+- name: git
+  type: docker-image
+  source:
+    repository: concourse/git-resource
+
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+
+###
+# Resources
+###
+resources:
+- name: git
+  type: git
+  source:
+    uri: {{tf_nat_gw_source_repo}}
+    branch: {{tf_nat_gw_source_branch}}
+
+- name: git-pull-requests
+  type: pull-request
+  source:
+    access_token: {{github_access_token}}
+    repo:         ((tf_nat_gw_source_github_owner))/((tf_nat_gw_source_github_repo))
+    base:         {{tf_nat_gw_source_branch}}
+    label:        ok-to-test

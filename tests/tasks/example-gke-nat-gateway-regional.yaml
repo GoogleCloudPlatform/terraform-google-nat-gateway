@@ -14,7 +14,9 @@
 
 platform: linux
 inputs:
-- name: terraform-google-nat-gateway
+- name: git
+- name: git-pull-requests
+  optional: true
 outputs:
 - name: email
 image_resource:
@@ -23,11 +25,15 @@ image_resource:
     repository: google/cloud-sdk
     tag: alpine
 params:
+  git_src:
+  git_target:
   service_account_json:
   project_id:
   backend_bucket:
   backend_prefix:
   env_name:
+  example_dir:
+  infra_dir:
   region:
   zone:
 run:
@@ -46,10 +52,27 @@ run:
     gcloud config set compute/zone $zone
     echo "y" | gcloud components install beta kubectl
 
-    cd terraform-google-nat-gateway
+    BASE_DIR=${PWD}
+
+    TEST_DIR=${BASE_DIR}/${git_src}/${example_dir}
+
+    INFRA_DIR="${BASE_DIR}/${infra_dir}"
+
+    # Always cleanup on exit
+    function cleanup {
+      cd ${TEST_DIR} && terraform destroy -input=false -lock=false -auto-approve
+      
+      # Keep infra for next task when testing PRs
+      if [[ "${git_src}" == "${git_target}" ]]; then
+        cd ${INFRA_DIR} && terraform destroy -input=false -lock=false -auto-approve
+      fi
+    }
+    trap cleanup EXIT
+
+    cd ${git_src}
 
     # Setup email
-    EMAIL=${PWD}/../email
+    EMAIL=${BASE_DIR}/email
     echo "terraform-google-nat-gateway/${env_name}: Failed to run example" > ${EMAIL}/subject-failed
     git --no-pager show > ${EMAIL}/body-failed
 
@@ -62,19 +85,7 @@ run:
     export GOOGLE_APPLICATION_CREDENTIALS=${SA_JSON}
     export GOOGLE_PROJECT=$project_id
 
-    BASE_DIR=${PWD}
-    INFRA_DIR=""
-    TEST_DIR=""
-
-    function cleanup {
-      for d in ${TEST_DIR} ${INFRA_DIR}; do
-        cd ${d}/ && terraform destroy -input=false -lock=false -auto-approve
-      done
-    }
-    trap cleanup EXIT
-
     ### Apply test infrastructure
-    INFRA_DIR=${BASE_DIR}/tests/infra/example-gke-nat-gateway-regional
 
     cd ${INFRA_DIR}
 
@@ -93,12 +104,11 @@ run:
     }
     EOF
 
-    terraform init -upgrade=true
+    terraform init -no-color -upgrade=true
     terraform workspace select ${env_name}-infra || terraform workspace new ${env_name}-infra 
-    terraform apply -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
+    terraform apply -no-color -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
 
     ### Begin Terraform example test
-    TEST_DIR=${BASE_DIR}/examples/gke-nat-gateway
 
     # Extract params from terraform outputs    
     NETWORK=$(terraform output subnetwork_name)
@@ -133,21 +143,42 @@ run:
     }
     EOF
     
-    # Run Terraform
-    terraform init -upgrade=true
-    terraform workspace select ${env_name} || terraform workspace new ${env_name}
-    terraform plan
-    terraform apply -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
+    # Apply and test function
+    function apply_and_run_test() {
+      terraform init -no-color -upgrade=true
+      terraform workspace select ${env_name} || terraform workspace new ${env_name}
+      terraform plan -lock=false -no-color
+      terraform apply -no-color -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
 
-    # Test NAT Gateway
-    echo "" > ${EMAIL}/body-failed
-    export CLOUDSDK_CONTAINER_USE_V1_API_CLIENT=false
-    gcloud beta container clusters get-credentials ${CLUSTER_NAME} --region ${REGION}
-    NAT_IP=$(terraform output ip-nat-gateway)
-    count=0
-    EXTERNAL_IP=""
-    while [[ $count -lt 10 && "${NAT_IP}" != "$(tr -d '\r' <<<${EXTERNAL_IP})" ]]; do
-      EXTERNAL_IP=$(kubectl run example -i -t --rm --restart=Never --image centos:7 -- curl -s http://ipinfo.io/ip || true)
-      ((count=count+1))
-    done
-    test $count -lt 10
+      echo "" > ${EMAIL}/body-failed
+      export CLOUDSDK_CONTAINER_USE_V1_API_CLIENT=false
+      gcloud beta container clusters get-credentials ${CLUSTER_NAME} --region ${REGION}
+      NAT_IP=$(terraform output ip-nat-gateway)
+      count=0
+      EXTERNAL_IP=""
+      while [[ $count -lt 10 && "${NAT_IP}" != "$(tr -d '\r' <<<${EXTERNAL_IP})" ]]; do
+        EXTERNAL_IP=$(kubectl run example -i -t --rm --restart=Never --image centos:7 -- curl -s http://ipinfo.io/ip || true)
+        ((count=count+1))
+      done
+      test $count -lt 10
+    }
+    
+    # Run Terraform and tests
+    apply_and_run_test
+
+    ### Begin upgrade test
+    if [[ "${git_src}" != "${git_target}" ]]; then
+      
+      PR_TEST_DIR="${BASE_DIR}/${git_target}/${example_dir}"
+
+      # Copy remote backend
+      cp "${TEST_DIR}/backend.tf" "${PR_TEST_DIR}/"
+
+      # Copy tfvars
+      cp "${TEST_DIR}/terraform.tfvars" "${PR_TEST_DIR}/"
+
+      cd ${PR_TEST_DIR}
+
+      ### Upgrade test
+      apply_and_run_test
+    fi

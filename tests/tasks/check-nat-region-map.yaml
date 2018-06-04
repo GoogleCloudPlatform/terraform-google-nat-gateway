@@ -14,7 +14,7 @@
 
 platform: linux
 inputs:
-- name: terraform-google-nat-gateway
+- name: git
 outputs:
 - name: email
 image_resource:
@@ -42,7 +42,7 @@ run:
     gcloud config set project $project_id
     gcloud config set compute/zone $zone
 
-    cd terraform-google-nat-gateway
+    cd git
 
     # Setup email
     EMAIL=${PWD}/../email
