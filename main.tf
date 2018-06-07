@@ -94,7 +94,8 @@ resource "google_compute_route" "nat-gateway" {
 }
 
 resource "google_compute_firewall" "nat-gateway" {
-  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  count   = "${length(var.tags)}"
+  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}-${count.index}"
   network = "${var.network}"
   project = "${var.project}"
 
@@ -102,8 +103,8 @@ resource "google_compute_firewall" "nat-gateway" {
     protocol = "all"
   }
 
-  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
-  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), "${list(element(var.tags), count.index)}}]
+  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), "${list(element(var.tags), count.index)}"))}"]
 }
 
 resource "google_compute_address" "default" {
