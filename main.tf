@@ -36,7 +36,7 @@ ENABLE_SQUID="${var.squid_enabled}"
 if [[ "$ENABLE_SQUID" == "true" ]]; then
   apt-get install -y squid3
 
-  cat - > /etc/squid3/squid.conf <<'EOM'
+  cat - > /etc/squid/squid.conf <<'EOM'
 ${file("${var.squid_config == "" ? "${format("%s/config/squid.conf", path.module)}" : var.squid_config}")}
 EOM
 
@@ -57,7 +57,7 @@ data "google_compute_address" "default" {
 }
 
 module "nat-gateway" {
-  source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  source             = "/usr/local/google/home/ahumane/work/gc/github/terraform-google-managed-instance-group"
   project            = "${var.project}"
   region             = "${var.region}"
   zone               = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
@@ -66,7 +66,7 @@ module "nat-gateway" {
   target_tags        = ["${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
   machine_type       = "${var.machine_type}"
   name               = "${var.name}nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  compute_image      = "debian-cloud/debian-8"
+  compute_image      = "${var.compute_image}"
   size               = 1
   network_ip         = "${var.ip}"
   can_ip_forward     = "true"
@@ -93,18 +93,20 @@ resource "google_compute_route" "nat-gateway" {
   priority               = "${var.route_priority}"
 }
 
-resource "google_compute_firewall" "nat-gateway" {
-  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  network = "${var.network}"
-  project = "${var.project}"
-
-  allow {
-    protocol = "all"
-  }
-
-  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
-  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
-}
+# This is deleted by the enforcer
+#resource "google_compute_firewall" "nat-gateway" {
+#  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+#  network = "${var.network}"
+#  project = "${var.project}"
+#
+#  allow {
+#    protocol = "all"
+#  }
+#  priority               = "${var.route_priority}"
+#
+#  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+#  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+#}
 
 resource "google_compute_address" "default" {
   count   = "${var.ip_address_name == "" ? 1 : 0}"
