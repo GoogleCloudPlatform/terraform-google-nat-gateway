@@ -89,18 +89,20 @@ resource "google_compute_route" "nat-gateway" {
   priority               = "${var.route_priority}"
 }
 
-resource "google_compute_firewall" "nat-gateway" {
-  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  network = "${var.network}"
-  project = "${var.project}"
-
-  allow {
-    protocol = "all"
-  }
-
-  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
-  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
-}
+# This is deleted by the enforcer
+#resource "google_compute_firewall" "nat-gateway" {
+#  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+#  network = "${var.network}"
+#  project = "${var.project}"
+#
+#  allow {
+#    protocol = "all"
+#  }
+#  priority               = "${var.route_priority}"
+#
+#  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+#  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+#}
 
 resource "google_compute_address" "default" {
   count   = "${var.ip_address_name == "" ? 1 : 0}"
