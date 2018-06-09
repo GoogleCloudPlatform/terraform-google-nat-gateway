@@ -69,6 +69,12 @@ variable machine_type {
   default     = "n1-standard-1"
 }
 
+variable metadata {
+  description = "Metadata to be attached to the NAT gateway instance"
+  type        = "map"
+  default     = {}
+}
+
 variable ip {
   description = "Override the IP used in the `region_params` map for the region."
   default     = ""
