@@ -16,7 +16,22 @@ module "nat" {
 }
 ```
 
-Add the `nat-REGION-ZONE` and  `nat-REGION` tags to your instances without external IPs to route outbound traffic through the nat gateway.
+And add the tag `${module.nat.routing_tag_regional}` or `${module.nat.routing_tag_zonal}` to your instances without external IPs to route outbound traffic through the nat gateway.
+
+## Usage
+
+```ruby
+module "mig" {
+  source      = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  region      = "us-central1"
+  zone        = "us-central1-a"
+  name        = "testnat"
+  target_tags = ["${module.nat.routing_tag_regional}"]
+  network     = "default"
+  subnetwork  = "default"
+}
+```
+
 
 ## Resources created
 
