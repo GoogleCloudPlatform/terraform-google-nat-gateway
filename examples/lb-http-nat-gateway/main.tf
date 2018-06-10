@@ -79,7 +79,7 @@ module "nat-gateway" {
 
 module "gce-lb-http" {
   source            = "github.com/GoogleCloudPlatform/terraform-google-lb-http"
-  name              = "group-http-lb"
+  name              = "${var.network_name}-lb"
   target_tags       = ["${var.network_name}-mig"]
   firewall_networks = ["${google_compute_subnetwork.default.name}"]
 
