@@ -55,10 +55,10 @@ module "mig1" {
   source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
   region             = "${var.region}"
   zone               = "${var.zone}"
-  name               = "lb-nat-mig"
+  name               = "${var.network_name}-mig"
   size               = 2
   access_config      = []
-  target_tags        = ["lb-nat-mig", "nat-${var.region}"]
+  target_tags        = ["${var.network_name}-mig", "nat-${var.region}"]
   service_port       = 80
   service_port_name  = "http"
   wait_for_instances = true
@@ -80,7 +80,7 @@ module "nat-gateway" {
 module "gce-lb-http" {
   source            = "github.com/GoogleCloudPlatform/terraform-google-lb-http"
   name              = "group-http-lb"
-  target_tags       = ["lb-nat-mig"]
+  target_tags       = ["${var.network_name}-mig"]
   firewall_networks = ["${google_compute_subnetwork.default.name}"]
 
   backends = {
