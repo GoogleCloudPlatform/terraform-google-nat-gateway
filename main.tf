@@ -56,7 +56,7 @@ module "nat-gateway" {
 
   access_config = [
     {
-      nat_ip = "${data.google_compute_address.default.address}"
+      nat_ip = "${var.ip_address_name == "" ? google_compute_address.default.address : data.google_compute_address.default.address}"
     },
   ]
 }
