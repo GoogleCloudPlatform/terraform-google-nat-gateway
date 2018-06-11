@@ -79,7 +79,7 @@ module "mig1" {
   source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
   region             = "${var.region}"
   zone               = "${var.zone1}"
-  name               = "ha-nat-mig"
+  name               = "${var.network_name}-mig"
   size               = 2
   access_config      = []
   target_tags        = ["nat-${var.region}"]
