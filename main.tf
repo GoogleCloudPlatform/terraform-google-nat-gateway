@@ -30,13 +30,15 @@ data "google_compute_network" "network" {
 }
 
 data "google_compute_address" "default" {
-  name    = "${element(concat(google_compute_address.default.*.name, list("${var.ip_address_name}")), 0)}"
+  count   = "${var.ip_address_name == "" ? 0 : 1}"
+  name    = "${var.ip_address_name}"
   project = "${var.network_project == "" ? var.project : var.network_project}"
   region  = "${var.region}"
 }
 
 module "nat-gateway" {
   source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  module_enabled     = "${var.module_enabled}"
   project            = "${var.project}"
   region             = "${var.region}"
   zone               = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
@@ -56,12 +58,13 @@ module "nat-gateway" {
 
   access_config = [
     {
-      nat_ip = "${var.ip_address_name == "" ? google_compute_address.default.address : data.google_compute_address.default.address}"
+      nat_ip = "${element(concat(google_compute_address.default.*.address, data.google_compute_address.default.*.address, list("")), 0)}"
     },
   ]
 }
 
 resource "google_compute_route" "nat-gateway" {
+  count                  = "${var.module_enabled ? 1 : 0}"
   name                   = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   project                = "${var.project}"
   dest_range             = "0.0.0.0/0"
@@ -73,6 +76,7 @@ resource "google_compute_route" "nat-gateway" {
 }
 
 resource "google_compute_firewall" "nat-gateway" {
+  count   = "${var.module_enabled ? 1 : 0}"
   name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network = "${var.network}"
   project = "${var.project}"
@@ -86,7 +90,7 @@ resource "google_compute_firewall" "nat-gateway" {
 }
 
 resource "google_compute_address" "default" {
-  count   = "${var.ip_address_name == "" ? 1 : 0}"
+  count   = "${var.module_enabled && var.ip_address_name == "" ? 1 : 0}"
   name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   project = "${var.project}"
   region  = "${var.region}"
