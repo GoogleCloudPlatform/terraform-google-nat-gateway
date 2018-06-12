@@ -53,6 +53,7 @@ resource "google_compute_subnetwork" "default" {
 
 module "nat-zone-1" {
   source     = "../../"
+  name       = "${var.network_name}-"
   region     = "${var.region}"
   zone       = "${var.zone1}"
   network    = "${google_compute_subnetwork.default.name}"
@@ -61,6 +62,7 @@ module "nat-zone-1" {
 
 module "nat-zone-2" {
   source     = "../../"
+  name       = "${var.network_name}-"
   region     = "${var.region}"
   zone       = "${var.zone2}"
   network    = "${google_compute_subnetwork.default.name}"
@@ -69,6 +71,7 @@ module "nat-zone-2" {
 
 module "nat-zone-3" {
   source     = "../../"
+  name       = "${var.network_name}-"
   region     = "${var.region}"
   zone       = "${var.zone3}"
   network    = "${google_compute_subnetwork.default.name}"
@@ -82,7 +85,7 @@ module "mig1" {
   name               = "${var.network_name}-mig"
   size               = 2
   access_config      = []
-  target_tags        = ["nat-${var.region}"]
+  target_tags        = ["${var.network_name}-nat-${var.region}"]
   service_port       = 80
   service_port_name  = "http"
   network            = "${google_compute_subnetwork.default.name}"
