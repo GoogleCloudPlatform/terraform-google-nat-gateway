@@ -404,10 +404,10 @@ jobs:
       project_id: {{project_id}}
       backend_bucket: {{tf_backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
-      env_name: tf-ci-nat-module-disable
+      env_name: tf-ci-nat-module-disable-pr
       example_dir: examples/module-disable
       zone: us-central1-f
-      TF_VAR_network_name: tf-ci-nat-module-disable
+      TF_VAR_network_name: tf-ci-nat-module-disable-pr
       TF_VAR_region: us-central1
       TF_VAR_zone: us-central1-f
     on_failure:
@@ -425,10 +425,10 @@ jobs:
       project_id: {{project_id}}
       backend_bucket: {{tf_backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
-      env_name: tf-ci-nat-module-disable
+      env_name: tf-ci-nat-module-disable-pr
       example_dir: examples/module-disable
       zone: us-central1-f
-      TF_VAR_network_name: tf-ci-nat-module-disable
+      TF_VAR_network_name: tf-ci-nat-module-disable-pr
       TF_VAR_region: us-central1
       TF_VAR_zone: us-central1-f
     on_failure:
