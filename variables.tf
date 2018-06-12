@@ -15,8 +15,8 @@
  */
 
 variable module_enabled {
-  description  = "To disable this module, set this to false"
-  default      = true
+  description = "To disable this module, set this to false"
+  default     = true
 }
 
 variable project {
@@ -112,6 +112,10 @@ variable region_params {
 
     australia-southeast1 = {
       zone = "australia-southeast1-b"
+    }
+
+    europe-north1 = {
+      zone = "europe-north1-b"
     }
 
     europe-west1 = {
