@@ -74,6 +74,11 @@ variable machine_type {
   default     = "n1-standard-1"
 }
 
+variable compute_image {
+  description = "Image used for NAT compute VMs."
+  default     = "debian-cloud/debian-9"
+}
+
 variable ip {
   description = "Override the IP used in the `region_params` map for the region."
   default     = ""
