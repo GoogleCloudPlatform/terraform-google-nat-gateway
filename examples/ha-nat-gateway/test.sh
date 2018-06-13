@@ -48,7 +48,7 @@ ssh_pid=$!
 echo "INFO: Verifying all NAT IPs: ${EXTERNAL_IPS[*]}"
 
 count=0
-while [[ $count -lt 60 && ${#EXTERNAL_IPS[@]} -gt 0 ]]; do
+while [[ $count -lt 180 && ${#EXTERNAL_IPS[@]} -gt 0 ]]; do
   IP=$(curl -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
   if [[ "${IP}" == ${EXTERNAL_IPS[0]} ]]; then
     echo "INFO: Found NAT IP: ${IP}"
@@ -57,6 +57,6 @@ while [[ $count -lt 60 && ${#EXTERNAL_IPS[@]} -gt 0 ]]; do
   ((count=count+1))
   sleep 1
 done
-test $count -lt 60
+test $count -lt 180
 
 echo "PASS: All NAT IPs found"
