@@ -18,9 +18,9 @@ ENABLE_SQUID="${squid_enabled}"
 if [[ "$$ENABLE_SQUID" == "true" ]]; then
   apt-get install -y squid3
 
-  cat - > /etc/squid3/squid.conf <<'EOM'
+  cat - > /etc/squid/squid.conf <<'EOM'
 ${file("${squid_config == "" ? "${format("%s/config/squid.conf", module_path)}" : squid_config}")}
 EOM
 
-  systemctl reload squid3
+  systemctl reload squid
 fi
