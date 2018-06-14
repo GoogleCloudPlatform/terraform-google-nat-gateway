@@ -28,6 +28,8 @@ params:
   git_src:
   git_target:
   service_account_json:
+  compute_ssh_key:
+  compute_ssh_pub:
   project_id:
   backend_bucket:
   backend_prefix:
@@ -54,6 +56,18 @@ run:
     gcloud auth activate-service-account --key-file=${SA_JSON}
     gcloud config set project $project_id
     gcloud config set compute/zone $zone
+
+    SSH_KEY=${HOME}/.ssh/google_compute_engine
+    mkdir -p ${HOME}/.ssh && chmod 0700 ${HOME}/.ssh
+    cat > ${SSH_KEY} <<EOF
+    $compute_ssh_key
+    EOF
+    chmod 0600 ${SSH_KEY}
+
+    SSH_PUB=${HOME}/.ssh/google_compute_engine.pub
+    cat > ${SSH_PUB} <<EOF
+    $compute_ssh_pub
+    EOF
 
     BASE_DIR=${PWD}
 

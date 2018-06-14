@@ -13,6 +13,18 @@ function cleanup() {
 }
 trap cleanup EXIT
 
+function wait_for_port() {
+  host=$1
+  port=$2
+  timeout=${3:-60}
+  local count=0
+  while test $count -lt $timeout && ! nc -z $host $port; do
+    sleep 1
+    ((count=count+1))
+  done
+  test $count -lt $timeout
+}
+
 NAT_IP=${EXTERNAL_IP:-$(terraform output nat-ip)}
 
 NAT_HOST=${NAT_HOST:-$(terraform output nat-host)}
@@ -52,19 +64,21 @@ EOF
   ssh -N -F ssh_config nat &
   ssh_pid=$!
 
+  wait_for_port localhost 1080 120
+
   echo "INFO: Verifying NAT IP: ${NAT_IP}"
 
   count=0
-  while [[ $count -lt 120 ]]; do
+  while [[ $count -lt 60 ]]; do
     IP=$(curl -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
     if [[ "${IP}" == "${NAT_IP}" ]]; then
       echo "INFO: Found NAT IP: ${IP}"      
       break
     fi
     ((count=count+1))
-    sleep 1
+    sleep 10
   done
-  test $count -lt 120
+  test $count -lt 60
 
   echo "PASS: Egress from instance is routed through NAT IP."
 fi
@@ -85,22 +99,26 @@ Host remote
   DynamicForward 1080
 EOF
 
+  wait_for_port ${REMOTE_HOST_IP} 22 300
+
   eval `ssh-agent`
   ssh-add ${HOME}/.ssh/google_compute_engine
   ssh -N -F ssh_config remote &
   ssh_pid=$!
 
+  wait_for_port localhost 1080 120
+
   count=0
-  while [[ $count -lt 120 ]]; do
+  while [[ $count -lt 60 ]]; do
     IP=$(curl -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
     if [[ -n "${IP}" && "${IP}" == "${REMOTE_HOST_IP}" ]]; then
       echo "INFO: IP check passed: ${IP}"
       break
     fi
     ((count=count+1))
-    sleep 1
+    sleep 10
   done
-  test $count -lt 120
+  test $count -lt 60
 
   echo "PASS: Egress from instance is routed directly to internet."
 fi

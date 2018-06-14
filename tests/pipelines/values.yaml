@@ -1,0 +1,8 @@
+maintainer_email: disla@google.com
+project_id: cloud-solutions-group
+backend_bucket: concourse-terraform-remote-backend
+
+uri: https://github.com/GoogleCloudPlatform/terraform-google-nat-gateway.git
+branch: master
+github_owner: GoogleCloudPlatform
+github_repo: terraform-google-nat-gateway

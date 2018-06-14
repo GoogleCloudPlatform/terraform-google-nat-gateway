@@ -27,7 +27,7 @@ jobs:
 
   - task: check-nat-region-map
     params:
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
       project_id: {{project_id}}
       region: us-central1
       zone: us-central1-f
@@ -54,9 +54,9 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-zonal
       example_dir: examples/gke-nat-gateway
@@ -86,9 +86,9 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-regional
       example_dir: examples/gke-nat-gateway
@@ -118,9 +118,9 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-private
       example_dir: examples/gke-nat-gateway
@@ -150,9 +150,11 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-ha
       example_dir: examples/ha-nat-gateway
@@ -185,9 +187,11 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-lb
       example_dir: examples/lb-http-nat-gateway
@@ -218,9 +222,11 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-multi-env
       example_dir: examples/multiple-nat-environments
@@ -254,9 +260,11 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-disable
       example_dir: examples/module-disable
@@ -287,9 +295,11 @@ jobs:
     params:
       git_src: git
       git_target: git
-      service_account_json: {{service_account_json}}
+      service_account_json: ((common.service_account_json))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
       project_id: {{project_id}}
-      backend_bucket: {{tf_backend_bucket}}
+      backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-squid
       example_dir: examples/squid-proxy
@@ -330,8 +340,8 @@ resources:
 - name: git
   type: git
   source:
-    uri: {{tf_nat_gw_source_repo}}
-    branch: {{tf_nat_gw_source_branch}}
+    uri: {{uri}}
+    branch: {{branch}}
 
 - name: once-a-day
   type: time
@@ -342,9 +352,9 @@ resources:
   type: email
   source:
     smtp:
-      host: {{smtp_host}}
-      port: {{smtp_port}}
-      username: {{smtp_username}}
-      password: {{smtp_password}}
+      host: ((common.smtp_host))
+      port: ((common.smtp_port))
+      username: ((common.smtp_username))
+      password: ((common.smtp_password))
     from: concourse-tf@gcp.solutions
     to: [ {{maintainer_email}} ]
