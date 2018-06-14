@@ -258,7 +258,7 @@ jobs:
       project_id: {{project_id}}
       backend_bucket: {{tf_backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
-      env_name: tf-ci-nat-ha
+      env_name: tf-ci-nat-disable
       example_dir: examples/module-disable
       zone: us-central1-f
       TF_VAR_network_name: tf-ci-nat-disable
