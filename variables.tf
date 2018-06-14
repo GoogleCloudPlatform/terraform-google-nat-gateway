@@ -80,7 +80,7 @@ variable compute_image {
 }
 
 variable ip {
-  description = "Override the IP used in the `region_params` map for the region."
+  description = "Override the internal IP. If not provided, an internal IP will automatically be assigned."
   default     = ""
 }
 
@@ -92,6 +92,18 @@ variable squid_enabled {
 variable squid_config {
   description = "The squid config file to use. If not specifed the module file config/squid.conf will be used."
   default     = ""
+}
+
+variable metadata {
+  description = "Metadata to be attached to the NAT gateway instance"
+  type        = "map"
+  default     = {}
+}
+
+variable ssh_source_ranges {
+  description = "Network ranges to allow SSH from"
+  type        = "list"
+  default     = ["0.0.0.0/0"]
 }
 
 variable region_params {
