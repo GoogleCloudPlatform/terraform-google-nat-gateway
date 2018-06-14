@@ -100,6 +100,12 @@ variable metadata {
   default     = {}
 }
 
+variable ssh_source_ranges {
+  description = "Network ranges to allow SSH from"
+  type        = "list"
+  default     = ["0.0.0.0/0"]
+}
+
 variable region_params {
   description = "Map of default zones and IPs for each region. Can be overridden using the `zone` and `ip` variables."
   type        = "map"

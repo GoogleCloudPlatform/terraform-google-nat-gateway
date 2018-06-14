@@ -56,6 +56,7 @@ module "nat-gateway" {
   startup_script     = "${data.template_file.nat-startup-script.rendered}"
   wait_for_instances = true
   metadata           = "${var.metadata}"
+  ssh_source_ranges  = "${var.ssh_source_ranges}"
 
   access_config = [
     {
