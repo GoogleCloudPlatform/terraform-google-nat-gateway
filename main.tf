@@ -55,6 +55,7 @@ module "nat-gateway" {
   service_port_name  = "http"
   startup_script     = "${data.template_file.nat-startup-script.rendered}"
   wait_for_instances = true
+  ssh_source_ranges  = "${var.ssh_source_ranges}"
 
   access_config = [
     {

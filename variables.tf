@@ -84,6 +84,12 @@ variable ip {
   default     = ""
 }
 
+variable ssh_source_ranges {
+  description = "Network ranges to allow SSH from"
+  type        = "list"
+  default     = ["0.0.0.0/0"]
+}
+
 variable squid_enabled {
   description = "Enable squid3 proxy on port 3128."
   default     = "false"
