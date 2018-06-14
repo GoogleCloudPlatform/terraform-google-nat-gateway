@@ -272,6 +272,39 @@ jobs:
     file: git/tests/tasks/example-module-disable.yaml
 
 ###
+# run-example-squid-proxy
+###
+- name: run-example-squid-proxy
+  serial: true
+  plan:
+  - get: once-a-day
+    trigger: true
+
+  - get: git
+    trigger: false
+
+  - task: test-example-squid-proxy
+    params:
+      git_src: git
+      git_target: git
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-squid
+      example_dir: examples/squid-proxy
+      zone: us-central1-c
+      TF_VAR_network_name: tf-ci-nat-squid
+      TF_VAR_region: us-central1
+      TF_VAR_zone: us-central1-c
+    on_failure:
+      put: send-an-email
+      params:
+        subject: email/subject-failed
+        body: email/body-failed
+    file: git/tests/tasks/example-squid-proxy.yaml
+
+###
 # Resource types
 ###
 resource_types:

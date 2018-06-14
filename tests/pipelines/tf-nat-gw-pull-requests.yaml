@@ -439,6 +439,66 @@ jobs:
     file: git/tests/tasks/example-module-disable.yaml
 
 ###
+# run-example-squid-proxy-pr
+###
+- name: run-example-squid-proxy-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+
+  - task: test-example-squid-proxy-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-squid-proxy-pr
+      example_dir: examples/squid-proxy
+      zone: us-central1-f
+      TF_VAR_network_name: tf-ci-nat-squid-proxy-pr
+      TF_VAR_region: us-central1
+      TF_VAR_zone: us-central1-f
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-squid-proxy.yaml
+  
+  - task: test-example-squid-proxy-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: {{service_account_json}}
+      project_id: {{project_id}}
+      backend_bucket: {{tf_backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-squid-proxy-pr
+      example_dir: examples/squid-proxy
+      zone: us-central1-f
+      TF_VAR_network_name: tf-ci-nat-squid-proxy-pr
+      TF_VAR_region: us-central1
+      TF_VAR_zone: us-central1-f
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-squid-proxy.yaml
+
+###
 # Updates PR with Passed state if all jobs pass
 ###
 - name: update-pr-passed
