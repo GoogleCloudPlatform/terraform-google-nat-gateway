@@ -94,6 +94,12 @@ variable squid_config {
   default     = ""
 }
 
+variable metadata {
+  description = "Metadata to be attached to the NAT gateway instance"
+  type        = "map"
+  default     = {}
+}
+
 variable region_params {
   description = "Map of default zones and IPs for each region. Can be overridden using the `zone` and `ip` variables."
   type        = "map"

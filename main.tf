@@ -55,6 +55,7 @@ module "nat-gateway" {
   service_port_name  = "http"
   startup_script     = "${data.template_file.nat-startup-script.rendered}"
   wait_for_instances = true
+  metadata           = "${var.metadata}"
 
   access_config = [
     {
