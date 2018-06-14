@@ -80,7 +80,7 @@ variable compute_image {
 }
 
 variable ip {
-  description = "Override the IP used in the `region_params` map for the region."
+  description = "Override the internal IP. If not provided, an internal IP will automatically be assigned."
   default     = ""
 }
 
