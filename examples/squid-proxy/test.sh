@@ -9,6 +9,18 @@ function cleanup() {
 }
 trap cleanup EXIT
 
+function wait_for_port() {
+  host=$1
+  port=$2
+  timeout=${3:-60}
+  local count=0
+  while test $count -lt $timeout && ! nc -w1 -z $host $port; do
+    sleep 1
+    ((count=count+1))
+  done
+  test $count -lt $timeout
+}
+
 NAT_IP=${EXTERNAL_IP:-$(terraform output nat-ip)}
 
 NAT_HOST_URI=${NAT_HOST:-$(terraform output nat-host)}
@@ -41,11 +53,15 @@ Host remote
     LocalForward 3128 ${NAT_HOST}:3128
 EOF
 
+wait_for_port ${NAT_IP} 22 300
+
 eval `ssh-agent`
 ssh-add ${HOME}/.ssh/google_compute_engine
 gcloud compute config-ssh
 ssh -N -F ssh_config remote &
 ssh_pid=$!
+
+wait_for_port localhost 3128 300
 
 echo "INFO: Verifying NAT IP through squid proxy: ${NAT_IP}"
 

@@ -18,7 +18,7 @@ function wait_for_port() {
   port=$2
   timeout=${3:-60}
   local count=0
-  while test $count -lt $timeout && ! nc -z $host $port; do
+  while test $count -lt $timeout && ! nc -w1 -z $host $port; do
     sleep 1
     ((count=count+1))
   done
