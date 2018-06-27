@@ -13,18 +13,6 @@ function cleanup() {
 }
 trap cleanup EXIT
 
-function wait_for_port() {
-  host=$1
-  port=$2
-  timeout=${3:-60}
-  local count=0
-  while test $count -lt $timeout && ! nc -w1 -z $host $port; do
-    sleep 1
-    ((count=count+1))
-  done
-  test $count -lt $timeout
-}
-
 NAT_IP=${EXTERNAL_IP:-$(terraform output nat-ip)}
 
 NAT_HOST=${NAT_HOST:-$(terraform output nat-host)}
@@ -65,8 +53,6 @@ EOF
   gcloud compute config-ssh
   autossh -M 20000 -f -N -F ${PWD}/ssh_config nat
 
-  wait_for_port localhost 1080 120
-
   echo "INFO: Verifying NAT IP: ${NAT_IP}"
 
   count=0
@@ -102,13 +88,9 @@ Host remote
   DynamicForward 1080
 EOF
 
-  wait_for_port ${REMOTE_HOST_IP} 22 300
-
   eval `ssh-agent`
   ssh-add ${HOME}/.ssh/google_compute_engine
   autossh -M 20001 -f -N -F ssh_config remote
-
-  wait_for_port localhost 1080 120
 
   count=0
   while [[ $count -lt 60 ]]; do
