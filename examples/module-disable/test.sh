@@ -8,7 +8,7 @@ MODE=$1
 function cleanup() {
   set +e
   rm -f ssh_config
-  kill $ssh_pid
+  killall autossh
   kill $SSH_AGENT_PID
 }
 trap cleanup EXIT
@@ -51,6 +51,8 @@ Host *
   User ${SSH_USER}
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
+  ConnectTimeout 5
+  BatchMode yes
 
 Host nat
   HostName ${NAT_IP}
@@ -61,8 +63,7 @@ EOF
   eval `ssh-agent`
   ssh-add ${HOME}/.ssh/google_compute_engine
   gcloud compute config-ssh
-  ssh -N -F ssh_config nat &
-  ssh_pid=$!
+  autossh -M 20000 -f -N -F ${PWD}/ssh_config nat
 
   wait_for_port localhost 1080 120
 
@@ -93,6 +94,8 @@ Host *
   User ${SSH_USER}
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
+  ConnectTimeout 5
+  BatchMode yes
 
 Host remote
   HostName ${REMOTE_HOST_IP}
@@ -103,8 +106,7 @@ EOF
 
   eval `ssh-agent`
   ssh-add ${HOME}/.ssh/google_compute_engine
-  ssh -N -F ssh_config remote &
-  ssh_pid=$!
+  autossh -M 20001 -f -N -F ssh_config remote
 
   wait_for_port localhost 1080 120
 
