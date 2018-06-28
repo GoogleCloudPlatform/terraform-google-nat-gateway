@@ -85,7 +85,7 @@ Host *
 
 Host remote
   HostName ${REMOTE_HOST_IP}
-  DynamicForward 1080
+  DynamicForward 1081
 EOF
 
   eval `ssh-agent`
@@ -94,7 +94,7 @@ EOF
 
   count=0
   while [[ $count -lt 60 ]]; do
-    IP=$(curl -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
+    IP=$(curl -s --socks5 localhost:1081 http://ipinfo.io/ip || true)
     if [[ -n "${IP}" && "${IP}" == "${REMOTE_HOST_IP}" ]]; then
       echo "INFO: IP check passed: ${IP}"
       break
