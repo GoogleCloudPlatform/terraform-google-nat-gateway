@@ -106,6 +106,12 @@ variable ssh_source_ranges {
   default     = ["0.0.0.0/0"]
 }
 
+variable instance_labels {
+  description = "Labels added to instances."
+  type        = "map"
+  default     = {}
+}
+
 variable region_params {
   description = "Map of default zones and IPs for each region. Can be overridden using the `zone` and `ip` variables."
   type        = "map"

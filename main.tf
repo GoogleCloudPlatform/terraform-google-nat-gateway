@@ -46,6 +46,7 @@ module "nat-gateway" {
   network            = "${var.network}"
   subnetwork         = "${var.subnetwork}"
   target_tags        = ["${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
+  instance_labels    = "${var.instance_labels}"
   machine_type       = "${var.machine_type}"
   name               = "${var.name}nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   compute_image      = "${var.compute_image}"
