@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
+
+set -x
 set -e
 
 function cleanup() {
   set +e
   rm -f ssh_config
-  kill $ssh_pid
+  killall -9 autossh
+  killall -9 ssh
   kill $SSH_AGENT_PID
 }
 trap cleanup EXIT
@@ -42,14 +45,14 @@ fi
 eval `ssh-agent`
 ssh-add ${HOME}/.ssh/google_compute_engine
 gcloud compute config-ssh
-ssh -N -F ssh_config remote &
-ssh_pid=$!
+export AUTOSSH_LOGFILE=/dev/stderr
+autossh -M 20000 -f -N -F ${PWD}/ssh_config remote
 
 echo "INFO: Verifying all NAT IPs: ${EXTERNAL_IPS[*]}"
 
 count=0
 while [[ $count -lt 180 && ${#EXTERNAL_IPS[@]} -gt 0 ]]; do
-  IP=$(curl -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
+  IP=$(curl -m 5 -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
   if [[ "${IP}" == ${EXTERNAL_IPS[0]} ]]; then
     echo "INFO: Found NAT IP: ${IP}"
     EXTERNAL_IPS=("${EXTERNAL_IPS[@]:1}")

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+set -x
 set -e
 
 NAT_IP=${NAT_IP:-$(terraform output ip-nat-gateway)}

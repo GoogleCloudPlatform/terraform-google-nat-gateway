@@ -52,7 +52,7 @@ run:
     cat > ${SA_JSON} <<EOF
     $service_account_json
     EOF
-    apk add --update jq curl
+    apk add --update jq curl autossh
     gcloud auth activate-service-account --key-file=${SA_JSON}
     gcloud config set project $project_id
     gcloud config set compute/zone $zone

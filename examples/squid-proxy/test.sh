@@ -1,25 +1,16 @@
 #!/usr/bin/env bash
+
+set -x
 set -e
 
 function cleanup() {
   set +e
   rm -f ssh_config
-  kill $ssh_pid
+  killall -9 autossh
+  killall -9 ssh
   kill $SSH_AGENT_PID
 }
 trap cleanup EXIT
-
-function wait_for_port() {
-  host=$1
-  port=$2
-  timeout=${3:-60}
-  local count=0
-  while test $count -lt $timeout && ! nc -w1 -z $host $port; do
-    sleep 1
-    ((count=count+1))
-  done
-  test $count -lt $timeout
-}
 
 NAT_IP=${EXTERNAL_IP:-$(terraform output nat-ip)}
 
@@ -53,28 +44,24 @@ Host remote
     LocalForward 3128 ${NAT_HOST}:3128
 EOF
 
-wait_for_port ${NAT_IP} 22 300
-
 eval `ssh-agent`
 ssh-add ${HOME}/.ssh/google_compute_engine
 gcloud compute config-ssh
-ssh -N -F ssh_config remote &
-ssh_pid=$!
-
-wait_for_port localhost 3128 300
+export AUTOSSH_LOGFILE=/dev/stderr
+autossh -M 20000 -f -N -F ${PWD}/ssh_config remote
 
 echo "INFO: Verifying NAT IP through squid proxy: ${NAT_IP}"
 
 count=0
-while [[ $count -lt 120 ]]; do
-IP=$(curl -s --proxy localhost:3128 http://ipinfo.io/ip || true)
-if [[ "${IP}" == "${NAT_IP}" ]]; then
+while [[ $count -lt 60 ]]; do
+  IP=$(curl -m 5 -s --proxy localhost:3128 http://ipinfo.io/ip || true)
+  if [[ "${IP}" == "${NAT_IP}" ]]; then
     echo "INFO: Found NAT IP: ${IP}"      
     break
-fi
-((count=count+1))
-sleep 1
+  fi
+  ((count=count+1))
+  sleep 10
 done
-test $count -lt 120
+test $count -lt 60
 
 echo "PASS: Egress from instance is routed through squid proxy."
