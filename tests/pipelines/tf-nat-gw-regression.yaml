@@ -93,8 +93,8 @@ jobs:
       env_name: tf-ci-nat-gke-regional
       example_dir: examples/gke-nat-gateway
       infra_dir: git/tests/infra/example-gke-nat-gateway-regional
-      region: us-central1
-      zone: us-central1-f
+      region: us-west1
+      zone: us-west1-b
     on_failure:
       put: send-an-email
       params:
