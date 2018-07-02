@@ -9,6 +9,7 @@ function cleanup() {
   set +e
   rm -f ssh_config
   killall -9 autossh
+  killall -9 ssh
   kill $SSH_AGENT_PID
 }
 trap cleanup EXIT
@@ -58,7 +59,7 @@ EOF
 
   count=0
   while [[ $count -lt 60 ]]; do
-    IP=$(curl -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
+    IP=$(curl -m 5 -s --socks5 localhost:1080 http://ipinfo.io/ip || true)
     if [[ "${IP}" == "${NAT_IP}" ]]; then
       echo "INFO: Found NAT IP: ${IP}"      
       break
@@ -96,7 +97,7 @@ EOF
 
   count=0
   while [[ $count -lt 60 ]]; do
-    IP=$(curl -s --socks5 localhost:1081 http://ipinfo.io/ip || true)
+    IP=$(curl -m 5 -s --socks5 localhost:1081 http://ipinfo.io/ip || true)
     if [[ -n "${IP}" && "${IP}" == "${REMOTE_HOST_IP}" ]]; then
       echo "INFO: IP check passed: ${IP}"
       break
