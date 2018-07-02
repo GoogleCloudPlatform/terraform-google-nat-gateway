@@ -8,7 +8,7 @@ MODE=$1
 function cleanup() {
   set +e
   rm -f ssh_config
-  killall autossh
+  killall -9 autossh
   kill $SSH_AGENT_PID
 }
 trap cleanup EXIT
@@ -51,6 +51,7 @@ EOF
   eval `ssh-agent`
   ssh-add ${HOME}/.ssh/google_compute_engine
   gcloud compute config-ssh
+  export AUTOSSH_LOGFILE=/dev/stderr
   autossh -M 20000 -f -N -F ${PWD}/ssh_config nat
 
   echo "INFO: Verifying NAT IP: ${NAT_IP}"
@@ -90,7 +91,8 @@ EOF
 
   eval `ssh-agent`
   ssh-add ${HOME}/.ssh/google_compute_engine
-  autossh -M 20001 -f -N -F ssh_config remote
+  export AUTOSSH_LOGFILE=/dev/stderr
+  autossh -M 20001 -f -N -F ${PWD}/ssh_config remote
 
   count=0
   while [[ $count -lt 60 ]]; do
