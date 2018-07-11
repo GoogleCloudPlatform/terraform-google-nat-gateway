@@ -153,7 +153,7 @@ run:
       count=0
       EXTERNAL_IP=""
       while [[ $count -lt 3 && "${NAT_IP}" != "$(tr -d '\r' <<<${EXTERNAL_IP})" ]]; do
-        EXTERNAL_IP=$(kubectl run example -i -t --rm --restart=Never --image centos:7 -- curl -s http://ipinfo.io/ip || true)
+        EXTERNAL_IP=$(kubectl run example-$(date "+%s") -i -t --rm --restart=Never --image centos:7 -- curl -s http://ipinfo.io/ip || true)
         ((count=count+1))
       done
       test $count -lt 3
