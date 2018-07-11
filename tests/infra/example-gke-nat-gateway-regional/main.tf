@@ -57,6 +57,11 @@ resource "google_container_cluster" "tf-ci" {
   min_master_version = "${data.external.container-regional-versions-beta.result.latest_master_version}"
   network            = "${google_compute_subnetwork.tf-ci.network}"
   subnetwork         = "${google_compute_subnetwork.tf-ci.name}"
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
 }
 
 output network {
