@@ -194,5 +194,5 @@ variable "dest_range" {
 
 variable "mig_version" {
   description = "Version to use for GoogleCloudPlatform/managed-instance-group/google"
-  default     = "1.1.8"
+  default     = "1.1.10"
 }
