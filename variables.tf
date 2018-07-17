@@ -191,3 +191,8 @@ variable "dest_range" {
   description = "The destination IPv4 address range that this route applies to"
   default     = "0.0.0.0/0"
 }
+
+variable "mig_version" {
+  description = "Version to use for GoogleCloudPlatform/managed-instance-group/google"
+  default     = "1.1.8"
+}
