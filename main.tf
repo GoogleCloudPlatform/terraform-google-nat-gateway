@@ -38,7 +38,7 @@ data "google_compute_address" "default" {
 
 module "nat-gateway" {
   source             = "GoogleCloudPlatform/managed-instance-group/google"
-  version            = "1.1.9"
+  version            = "${var.mig_version}"
   module_enabled     = "${var.module_enabled}"
   project            = "${var.project}"
   region             = "${var.region}"
