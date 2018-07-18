@@ -2,6 +2,10 @@
 
 This example creates three NAT Gateway instances in different zones and Compute Engine Network Routes to route outbound traffic from an existing GKE cluster.
 
+**Figure 1.** *diagram of Google Cloud resources*
+
+![architecture diagram](./diagram.png)
+
 ## Setup Environment
 
 ```
