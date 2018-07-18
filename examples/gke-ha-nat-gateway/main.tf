@@ -38,6 +38,10 @@ variable zone3 {
   default = "us-central1-c"
 }
 
+variable name {
+  default = "gke-ha-"
+}
+
 variable network {
   default = "default"
 }
@@ -48,7 +52,7 @@ provider google {
 
 module "nat-zone-1" {
   source         = "../../"
-  name           = "${var.gke_node_tag}-"
+  name           = "${var.name}-"
   region         = "${var.region}"
   zone           = "${var.zone1}"
   tags           = ["${var.gke_node_tag}"]
@@ -59,7 +63,7 @@ module "nat-zone-1" {
 
 module "nat-zone-2" {
   source         = "../../"
-  name           = "${var.gke_node_tag}-"
+  name           = "${var.name}-"
   region         = "${var.region}"
   zone           = "${var.zone2}"
   tags           = ["${var.gke_node_tag}"]
@@ -70,7 +74,7 @@ module "nat-zone-2" {
 
 module "nat-zone-3" {
   source         = "../../"
-  name           = "${var.gke_node_tag}-"
+  name           = "${var.name}-"
   region         = "${var.region}"
   zone           = "${var.zone3}"
   tags           = ["${var.gke_node_tag}"]

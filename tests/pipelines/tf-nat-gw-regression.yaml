@@ -133,7 +133,41 @@ jobs:
         subject: email/subject-failed
         body: email/body-failed
     file: git/tests/tasks/example-gke-nat-gateway-private.yaml
-  
+
+###
+# run-example-gke-ha-regional
+###
+- name: run-example-gke-ha-regional
+  serial: true
+  plan:
+  - get: once-a-day
+    trigger: true
+
+  - get: git
+    trigger: false
+
+  - task: run-example-gke-ha-regional
+    params:
+      git_src: git
+      git_target: git
+      service_account_json: ((common.service_account_json))
+      project_id: {{project_id}}
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-ha-regional
+      example_dir: examples/gke-ha-nat-gateway
+      infra_dir: git/tests/infra/example-gke-ha-nat-gateway-regional
+      region: us-central1
+      zone1: us-central1-a
+      zone2: us-central1-b
+      zone3: us-central1-c
+    on_failure:
+      put: send-an-email
+      params:
+        subject: email/subject-failed
+        body: email/body-failed
+    file: git/tests/tasks/example-gke-ha-nat-gateway-regional.yaml
+
 ###
 # run-example-ha-nat-gateway
 ###
