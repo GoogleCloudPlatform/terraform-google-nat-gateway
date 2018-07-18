@@ -94,7 +94,7 @@ resource "google_compute_firewall" "nat-gateway" {
 }
 
 resource "google_compute_address" "default" {
-  count   = "${var.module_enabled && var.ip_address_name == "" ? 1 : 0}"
+  count   = "${var.module_enabled && var.static_ip_address && var.ip_address_name == "" ? 1 : 0}"
   name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   project = "${var.project}"
   region  = "${var.region}"
