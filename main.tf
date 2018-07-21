@@ -67,6 +67,16 @@ module "nat-gateway" {
   ]
 }
 
+data "google_compute_instance_group" "nat-gateway" {
+  name = "${var.name}nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  zone = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+}
+
+data "google_compute_instance" "nat-gateway" {
+  name = "${element(data.google_compute_instance_group.nat-gateway.instances, 0)}"
+  zone = "${var.zone =  = "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+}
+
 resource "google_compute_route" "nat-gateway" {
   count                  = "${var.module_enabled ? 1 : 0}"
   name                   = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
