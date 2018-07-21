@@ -100,6 +100,11 @@ variable metadata {
   default     = {}
 }
 
+variable static_ip_address {
+  description = "Whether or not the NAT should have a static external IP."
+  default     = true
+}
+
 variable ssh_source_ranges {
   description = "Network ranges to allow SSH from"
   type        = "list"

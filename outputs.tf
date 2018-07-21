@@ -31,7 +31,10 @@ output instance {
 
 output external_ip {
   description = "The external IP address of the NAT gateway instance."
-  value       = "${element(concat(google_compute_address.default.*.address, data.google_compute_address.default.*.address, list("")), 0)}"
+
+  value = "${element(concat(google_compute_address.default.*.address,
+      data.google_compute_address.default.*.address,
+      data.google_compute_instance.nat-gateway.*.address, 0)}"
 }
 
 output routing_tag_regional {
