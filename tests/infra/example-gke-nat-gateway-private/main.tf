@@ -73,7 +73,7 @@ resource "google_compute_subnetwork" "tf-ci-gke-private" {
 }
 
 resource "google_container_cluster" "tf-ci" {
-  name                   = "tf-ci-private"
+  name                   = "${var.network_name}"
   private_cluster        = true
   zone                   = "${var.zone}"
   initial_node_count     = 3

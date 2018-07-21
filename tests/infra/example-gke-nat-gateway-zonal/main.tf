@@ -50,7 +50,7 @@ resource "google_compute_subnetwork" "tf-ci" {
 }
 
 resource "google_container_cluster" "tf-ci" {
-  name               = "tf-ci-nat-gke-zonal"
+  name               = "${var.network_name}"
   zone               = "${var.zone}"
   initial_node_count = 3
   min_master_version = "${data.google_container_engine_versions.default.latest_node_version}"
