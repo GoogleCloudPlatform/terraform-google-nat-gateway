@@ -26,16 +26,12 @@ variable zone2 {
   default = "us-west1-b"
 }
 
-variable zone3 {
-  default = "us-west1-c"
-}
-
 provider google {
   region = "${var.region}"
 }
 
 variable network_name {
-  default = "ha-nat-example"
+  default = "multi-zone-nat-example"
 }
 
 resource "google_compute_network" "default" {
@@ -69,23 +65,15 @@ module "nat-zone-2" {
   subnetwork = "${google_compute_subnetwork.default.name}"
 }
 
-module "nat-zone-3" {
-  source     = "../../"
-  name       = "${var.network_name}-"
-  region     = "${var.region}"
-  zone       = "${var.zone3}"
-  network    = "${google_compute_subnetwork.default.name}"
-  subnetwork = "${google_compute_subnetwork.default.name}"
-}
-
-module "mig1" {
-  source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+module "mig-zone-1" {
+  source             = "GoogleCloudPlatform/managed-instance-group/google"
+  version            = "1.1.10"
   region             = "${var.region}"
   zone               = "${var.zone1}"
-  name               = "${var.network_name}-mig"
+  name               = "${var.network_name}-mig-1"
   size               = 2
   access_config      = []
-  target_tags        = ["${module.nat-zone-1.routing_tag_regional}"]
+  target_tags        = ["${module.nat-zone-1.routing_tag_zonal}"]
   service_port       = 80
   service_port_name  = "http"
   network            = "${google_compute_subnetwork.default.name}"
@@ -93,22 +81,42 @@ module "mig1" {
   wait_for_instances = true
 }
 
-output "nat-host" {
+module "mig-zone-2" {
+  source             = "GoogleCloudPlatform/managed-instance-group/google"
+  version            = "1.1.10"
+  region             = "${var.region}"
+  zone               = "${var.zone2}"
+  name               = "${var.network_name}-mig-2"
+  size               = 2
+  access_config      = []
+  target_tags        = ["${module.nat-zone-2.routing_tag_zonal}"]
+  service_port       = 80
+  service_port_name  = "http"
+  network            = "${google_compute_subnetwork.default.name}"
+  subnetwork         = "${google_compute_subnetwork.default.name}"
+  wait_for_instances = true
+}
+
+output "nat-zone-1-host" {
   value = "${module.nat-zone-1.instance}"
 }
 
-output "remote-host-uri" {
-  value = "${element(module.mig1.instances[0], 0)}"
+output "nat-zone-2-host" {
+  value = "${module.nat-zone-2.instance}"
 }
 
-output "ip-nat-zone-1" {
+output "mig-1-host-uri" {
+  value = "${element(module.mig-zone-1.instances[0], 0)}"
+}
+
+output "mig-2-host-uri" {
+  value = "${element(module.mig-zone-2.instances[0], 0)}"
+}
+
+output "nat-zone-1-ip" {
   value = "${module.nat-zone-1.external_ip}"
 }
 
-output "ip-nat-zone-2" {
+output "nat-zone-2-ip" {
   value = "${module.nat-zone-2.external_ip}"
-}
-
-output "ip-nat-zone-3" {
-  value = "${module.nat-zone-3.external_ip}"
 }
