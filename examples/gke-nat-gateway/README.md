@@ -30,7 +30,7 @@ ZONE=us-central1-b
 Create a `terraform.tfvars` file with the the region, zone, master IP, and the node pool nework tag name to the tfvars file:
 
 ```
-NODE_TAG=$(gcloud compute instance-templates describe $(gcloud compute instance-templates list --filter=name~gke-${CLUSTER_NAME} --limit=1 --uri) --format='get(properties.tags.items[0])')
+NODE_TAG=$(gcloud compute instance-templates describe $(gcloud compute instance-templates list --filter=name~gke-${CLUSTER_NAME:0:20} --limit=1 --uri) --format='get(properties.tags.items[0])')
 MASTER_IP=$(gcloud compute firewall-rules describe ${NODE_TAG/-node/-ssh} --format='value(sourceRanges)')
 
 cat > terraform.tfvars <<EOF
