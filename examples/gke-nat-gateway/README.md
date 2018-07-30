@@ -25,6 +25,8 @@ Record the target cluster name, region and zone:
 CLUSTER_NAME=dev
 REGION=us-central1
 ZONE=us-central1-b
+NETWORK=default
+SUBNETWORK=default
 ```
 
 Create a `terraform.tfvars` file with the the region, zone, master IP, and the node pool nework tag name to the tfvars file:
@@ -36,6 +38,8 @@ MASTER_IP=$(gcloud compute firewall-rules describe ${NODE_TAG/-node/-ssh} --form
 cat > terraform.tfvars <<EOF
 region = "${REGION}"
 zone   = "${ZONE}"
+network = "${NETWORK}"
+subnetwork = "${SUBNETWORK}"
 gke_master_ip = "${MASTER_IP}"
 gke_node_tag = "${NODE_TAG}"
 EOF

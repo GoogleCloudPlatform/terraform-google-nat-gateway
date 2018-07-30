@@ -83,7 +83,7 @@ run:
     git --no-pager show > ${EMAIL}/body-failed
 
     # Install latest terraform
-    curl -sL 	https://goo.gl/UYp3WG | bash
+    bash examples/terraform-install.sh
     source ${HOME}/.bashrc
     terraform version
 
@@ -107,16 +107,16 @@ run:
     function apply_and_run_test() {
       terraform init -no-color -upgrade=true
       terraform workspace select ${env_name} || terraform workspace new ${env_name}
-      terraform plan -lock=false -no-color
-      terraform apply -no-color -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
+      terraform plan -lock=false -no-color -out terraform.tfplan
+      terraform apply -no-color -input=false -lock=false -auto-approve terraform.tfplan | tee ${EMAIL}/body-failed
       
       echo "" > ${EMAIL}/body-failed
       bash -xe ./test.sh nat | tee ${EMAIL}/body-failed
 
       export TF_VAR_module_enabled=false
 
-      terraform plan -lock=false -no-color
-      terraform apply -no-color -input=false -lock=false -auto-approve | tee ${EMAIL}/body-failed
+      terraform plan -lock=false -no-color -out terraform.tfplan
+      terraform apply -no-color -input=false -lock=false -auto-approve terraform.tfplan | tee ${EMAIL}/body-failed
 
       bash -xe ./test.sh direct | tee ${EMAIL}/body-failed
 
