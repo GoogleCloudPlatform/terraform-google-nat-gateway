@@ -168,42 +168,42 @@ jobs:
         body: email/body-failed
     file: git/tests/tasks/example-gke-ha-nat-gateway-regional.yaml
 
-###
-# run-example-ha-nat-gateway
-###
-- name: run-example-ha-nat-gateway
-  serial: true
-  plan:
-  - get: once-a-day
-    trigger: true
+# ###
+# # run-example-ha-nat-gateway
+# ###
+# - name: run-example-ha-nat-gateway
+#   serial: true
+#   plan:
+#   - get: once-a-day
+#     trigger: true
 
-  - get: git
-    trigger: false
+#   - get: git
+#     trigger: false
 
-  - task: test-example-ha-nat
-    params:
-      git_src: git
-      git_target: git
-      service_account_json: ((common.service_account_json))
-      compute_ssh_key: ((common.compute_ssh_key))
-      compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
-      backend_bucket: {{backend_bucket}}
-      backend_prefix: terraform-google-nat-gateway/
-      env_name: tf-ci-nat-ha
-      example_dir: examples/ha-nat-gateway
-      zone: us-east4-a
-      TF_VAR_network_name: tf-ci-nat-ha
-      TF_VAR_region: us-east4
-      TF_VAR_zone1: us-east4-a
-      TF_VAR_zone2: us-east4-b
-      TF_VAR_zone3: us-east4-c
-    on_failure:
-      put: send-an-email
-      params:
-        subject: email/subject-failed
-        body: email/body-failed
-    file: git/tests/tasks/example-ha-nat-gateway.yaml
+#   - task: test-example-ha-nat
+#     params:
+#       git_src: git
+#       git_target: git
+#       service_account_json: ((common.service_account_json))
+#       compute_ssh_key: ((common.compute_ssh_key))
+#       compute_ssh_pub: ((common.compute_ssh_pub))
+#       project_id: {{project_id}}
+#       backend_bucket: {{backend_bucket}}
+#       backend_prefix: terraform-google-nat-gateway/
+#       env_name: tf-ci-nat-ha
+#       example_dir: examples/ha-nat-gateway
+#       zone: us-east4-a
+#       TF_VAR_network_name: tf-ci-nat-ha
+#       TF_VAR_region: us-east4
+#       TF_VAR_zone1: us-east4-a
+#       TF_VAR_zone2: us-east4-b
+#       TF_VAR_zone3: us-east4-c
+#     on_failure:
+#       put: send-an-email
+#       params:
+#         subject: email/subject-failed
+#         body: email/body-failed
+#     file: git/tests/tasks/example-ha-nat-gateway.yaml
 
 ###
 # run-example-lb-nat-gateway
