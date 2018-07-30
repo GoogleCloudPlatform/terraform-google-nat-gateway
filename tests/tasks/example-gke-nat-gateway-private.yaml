@@ -120,7 +120,7 @@ run:
     cd ${TEST_DIR}
 
     # Generate terraform.tfvars
-    NODE_TAG=$(gcloud compute instance-templates describe $(gcloud compute instance-templates list --filter=name~gke-${CLUSTER_NAME} --limit=1 --uri) --format='get(properties.tags.items[0])')
+    NODE_TAG=$(gcloud compute instance-templates describe $(gcloud compute instance-templates list --filter=name~gke-${CLUSTER_NAME:0:20} --limit=1 --uri) --format='get(properties.tags.items[0])')
     test -n "${NODE_TAG}"
     
     cat > terraform.tfvars <<EOF
