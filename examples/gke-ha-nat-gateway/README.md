@@ -17,7 +17,7 @@ This example assumes you have an existing Kubernetes Engine cluster.
 
 ### Get Master IP and Node Tags
 
-Record the target cluster name, region and zone:
+Record the target cluster name, region, zone, and network:
 
 ```
 CLUSTER_NAME=dev
@@ -25,6 +25,8 @@ REGION=us-central1
 ZONE_1=us-central1-a
 ZONE_2=us-central1-b
 ZONE_3=us-central1-c
+NETWORK=default
+SUBNETWORK=default
 ```
 
 Create a `terraform.tfvars` file with the the region, zone, master IP, and the node pool nework tag name to the tfvars file:
@@ -40,6 +42,8 @@ zone2   = "${ZONE_2}"
 zone3   = "${ZONE_3}"
 gke_master_ip = "${MASTER_IP}"
 gke_node_tag = "${NODE_TAG}"
+network = "${NETWORK}"
+subnetwork = "${SUBNETWORK}"
 EOF
 ```
 
@@ -47,8 +51,8 @@ EOF
 
 ```
 terraform init
-terraform plan
-terraform apply
+terraform plan -out terraform.tfplan
+terraform apply terraform.tfplan
 ```
 
 ## Verify NAT Gateway Routing
