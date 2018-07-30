@@ -36,10 +36,10 @@ output external_ip {
 
 output routing_tag_regional {
   description = "The tag that any other instance will need to have in order to get the regional routing rule"
-  value       = "${var.name}nat-${var.region}"
+  value       = "${local.regional_tag}"
 }
 
 output routing_tag_zonal {
   description = "The tag that any other instance will need to have in order to get the zonal routing rule"
-  value       = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  value       = "${local.zonal_tag}"
 }
