@@ -131,6 +131,68 @@ jobs:
     file: git/tests/tasks/example-gke-nat-gateway-regional.yaml
 
 ###
+# run-example-gke-ha-regional-pr
+###
+- name: run-example-gke-ha-regional-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+
+  - get: git-pull-requests
+    trigger: true
+    version: every
+  
+  - put: git-pull-requests
+    params:
+      path: git-pull-requests
+      status: pending
+
+  - task: run-example-gke-ha-regional-upgrade
+    params:
+      git_src: git
+      git_target: git-pull-requests
+      service_account_json: ((common.service_account_json))
+      project_id: {{project_id}}
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-ha-regional-pr
+      example_dir: examples/gke-ha-nat-gateway
+      infra_dir: git/tests/infra/example-gke-ha-nat-gateway-regional
+      region: us-west1
+      zone1: us-west1-a
+      zone2: us-west1-b
+      zone3: us-west1-c
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-ha-nat-gateway-regional.yaml
+  
+  - task: run-example-gke-ha-regional-clean-apply
+    params:
+      git_src: git-pull-requests
+      git_target: git-pull-requests
+      service_account_json: ((common.service_account_json))
+      project_id: {{project_id}}
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway/
+      env_name: tf-ci-nat-gke-ha-regional-pr
+      example_dir: examples/gke-ha-nat-gateway
+      infra_dir: git/tests/infra/example-gke-ha-nat-gateway-regional
+      region: us-west1
+      zone1: us-west1-a
+      zone2: us-west1-b
+      zone3: us-west1-c
+    on_failure:
+      put: git-pull-requests
+      params:
+        path: git-pull-requests
+        status: failure
+    file: git/tests/tasks/example-gke-ha-nat-gateway-regional.yaml
+
+###
 # run-example-gke-private-pr
 ###
 - name: run-example-gke-private-pr
@@ -528,6 +590,7 @@ jobs:
     - run-example-gke-zonal-pr
     - run-example-gke-private-pr
     - run-example-gke-regional-pr
+    - run-example-gke-ha-regional-pr
     - run-example-ha-nat-gateway-pr
     - run-example-lb-nat-gateway-pr
     - run-example-multi-env-pr
