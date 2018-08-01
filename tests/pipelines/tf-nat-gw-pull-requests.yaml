@@ -36,8 +36,8 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-zonal-pr
@@ -56,8 +56,8 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-zonal-pr
@@ -94,8 +94,8 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-regional-pr
@@ -114,8 +114,8 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-regional-pr
@@ -152,8 +152,8 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-ha-regional-pr
@@ -174,8 +174,8 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-ha-regional-pr
@@ -214,8 +214,8 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-private-pr
@@ -234,8 +234,8 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
-      project_id: {{project_id}}
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-gke-private-pr
@@ -272,10 +272,10 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-ha-pr
@@ -297,10 +297,10 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-ha-pr
@@ -340,10 +340,10 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-lb-pr
@@ -363,10 +363,10 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-lb-pr
@@ -404,10 +404,10 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-multi-env-pr
@@ -430,10 +430,10 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-multi-env-pr
@@ -474,10 +474,10 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-module-disable-pr
@@ -497,10 +497,10 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-module-disable-pr
@@ -538,10 +538,10 @@ jobs:
     params:
       git_src: git
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-squid-proxy-pr
@@ -561,10 +561,10 @@ jobs:
     params:
       git_src: git-pull-requests
       git_target: git-pull-requests
-      service_account_json: ((common.service_account_json))
+      service_account_json: ((pr-project.service_account_json))
       compute_ssh_key: ((common.compute_ssh_key))
       compute_ssh_pub: ((common.compute_ssh_pub))
-      project_id: {{project_id}}
+      project_id: ((pr-project.project_id))
       backend_bucket: {{backend_bucket}}
       backend_prefix: terraform-google-nat-gateway/
       env_name: tf-ci-nat-squid-proxy-pr

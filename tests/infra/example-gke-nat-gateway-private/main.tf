@@ -96,6 +96,11 @@ resource "google_container_cluster" "tf-ci" {
   min_master_version = "${data.google_container_engine_versions.default.latest_node_version}"
   network            = "${google_compute_subnetwork.tf-ci.network}"
   subnetwork         = "${google_compute_subnetwork.tf-ci-gke-private.name}"
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
 }
 
 output network {

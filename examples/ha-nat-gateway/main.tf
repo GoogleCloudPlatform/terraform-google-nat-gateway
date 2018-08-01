@@ -87,7 +87,8 @@ module "mig1" {
   access_config      = []
   target_tags        = ["${var.network_name}-nat-${var.region}"]
   service_port       = 80
-  service_port_name  = "http"
+  service_port_name  = "none"
+  http_health_check  = false
   network            = "${google_compute_subnetwork.default.name}"
   subnetwork         = "${google_compute_subnetwork.default.name}"
   wait_for_instances = true

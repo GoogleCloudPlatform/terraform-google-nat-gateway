@@ -1,0 +1,372 @@
+# Copyright 2017 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+jobs:
+
+###
+# cleanup-example-gke-zonal
+###
+- name: cleanup-example-gke-zonal
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-gke-zonal
+      example_dir: examples/gke-nat-gateway
+      infra_dir: tests/infra/example-gke-nat-gateway-zonal
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-gke-zonal-pr
+###
+- name: cleanup-example-gke-zonal-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-gke-zonal-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: tests/infra/example-gke-nat-gateway-zonal
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-gke-regional
+###
+- name: cleanup-example-gke-regional
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-gke-regional
+      example_dir: examples/gke-nat-gateway
+      infra_dir: tests/infra/example-gke-nat-gateway-regional
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-gke-regional-pr
+###
+- name: cleanup-example-gke-regional-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-gke-regional-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: tests/infra/example-gke-nat-gateway-regional
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-gke-private
+###
+- name: cleanup-example-gke-private
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-gke-private
+      example_dir: examples/gke-nat-gateway
+      infra_dir: tests/infra/example-gke-nat-gateway-private
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-gke-private-pr
+###
+- name: cleanup-example-gke-private-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-gke-private-pr
+      example_dir: examples/gke-nat-gateway
+      infra_dir: tests/infra/example-gke-nat-gateway-private
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-gke-ha-regional
+###
+- name: cleanup-example-gke-ha-regional
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-gke-ha-regional
+      example_dir: examples/gke-ha-nat-gateway
+      infra_dir: tests/infra/example-gke-ha-nat-gateway-regional
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-gke-ha-regional-pr
+###
+- name: cleanup-example-gke-ha-regional-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-gke-ha-regional-pr
+      example_dir: examples/gke-ha-nat-gateway
+      infra_dir: tests/infra/example-gke-ha-nat-gateway-regional
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-ha-nat-gateway
+###
+- name: cleanup-example-ha-nat-gateway
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-ha
+      example_dir: examples/ha-nat-gateway
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-ha-nat-gateway-pr
+###
+- name: cleanup-example-ha-nat-gateway-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-ha-pr
+      example_dir: examples/ha-nat-gateway
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-lb-nat-gateway
+###
+- name: cleanup-example-lb-nat-gateway
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-lb
+      example_dir: examples/lb-http-nat-gateway
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-lb-nat-gateway-pr
+###
+- name: cleanup-example-lb-nat-gateway-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-lb-pr
+      example_dir: examples/lb-http-nat-gateway
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-multi-env
+###
+- name: cleanup-example-multi-env
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-multi-env
+      example_dir: examples/multiple-nat-environments
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-multi-env-pr
+###
+- name: cleanup-example-multi-env-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-multi-env-pr
+      example_dir: examples/multiple-nat-environments
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-module-disable
+###
+- name: cleanup-example-module-disable
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-disable
+      example_dir: examples/module-disable
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-module-disable-pr
+###
+- name: cleanup-example-module-disable-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-disable-pr
+      example_dir: examples/module-disable
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-squid-proxy
+###
+- name: cleanup-example-squid-proxy
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      env_name: tf-ci-nat-squid
+      example_dir: examples/squid-proxy
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# cleanup-example-squid-proxy-pr
+###
+- name: cleanup-example-squid-proxy-pr
+  serial: true
+  plan:
+  - get: git
+    trigger: false
+  
+  - task: cleanup
+    params:
+      service_account_json: ((pr-project.service_account_json))
+      project_id: ((pr-project.project_id))
+      env_name: tf-ci-nat-squid-pr
+      example_dir: examples/squid-proxy
+    file: git/tests/tasks/cleanup.yaml
+
+###
+# Resource types
+###
+resource_types:
+- name: git
+  type: docker-image
+  source:
+    repository: concourse/git-resource
+
+###
+# Resources
+###
+resources:
+- name: git
+  type: git
+  source:
+    uri: {{uri}}
+    branch: {{branch}}
+
+groups:
+- name: regression
+  jobs:
+  - cleanup-example-gke-zonal
+  - cleanup-example-gke-private
+  - cleanup-example-gke-regional
+  - cleanup-example-gke-ha-regional
+  - cleanup-example-ha-nat-gateway
+  - cleanup-example-multi-env
+  - cleanup-example-module-disable
+  - cleanup-example-squid-proxy
+  - cleanup-example-lb-nat-gateway
+- name: pull-requests
+  jobs:
+  - cleanup-example-gke-zonal-pr
+  - cleanup-example-gke-regional-pr
+  - cleanup-example-gke-private-pr
+  - cleanup-example-gke-ha-regional-pr
+  - cleanup-example-ha-nat-gateway-pr
+  - cleanup-example-multi-env-pr
+  - cleanup-example-module-disable-pr
+  - cleanup-example-squid-proxy-pr
+  - cleanup-example-lb-nat-gateway-pr
