@@ -16,7 +16,7 @@ module "nat" {
 }
 ```
 
-And add the tag `${module.nat.routing_tag_regional}` or `${module.nat.routing_tag_zonal}` to your instances without external IPs to route outbound traffic through the nat gateway.
+And add the tag `${module.nat.routing_tag_regional}` to your instances without external IPs to route outbound traffic through the nat gateway.
 
 ## Usage
 
