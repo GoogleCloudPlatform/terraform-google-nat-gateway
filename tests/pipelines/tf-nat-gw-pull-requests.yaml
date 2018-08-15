@@ -160,9 +160,10 @@ jobs:
       example_dir: examples/gke-ha-nat-gateway
       infra_dir: git/tests/infra/example-gke-ha-nat-gateway-regional
       region: us-west1
-      zone1: us-west1-a
-      zone2: us-west1-b
-      zone3: us-west1-c
+      TF_VAR_zone1: us-west1-a
+      TF_VAR_zone2: us-west1-b
+      TF_VAR_zone3: us-west1-c
+      TF_VAR_name: tf-ci-gke-ha-pr
     on_failure:
       put: git-pull-requests
       params:
