@@ -32,13 +32,8 @@ provider google {
   region = "${var.region}"
 }
 
-// External data source to fetch latest regional versions (beta).
-data "external" "container-regional-versions-beta" {
-  program = ["${path.module}/get_server_config_beta.sh"]
-
-  query = {
-    region = "${var.region}"
-  }
+data "google_container_engine_versions" "default" {
+  zone = "${element(var.zones, 0)}"
 }
 
 resource "google_compute_network" "tf-ci" {
@@ -60,7 +55,7 @@ resource "google_container_cluster" "tf-ci" {
   region             = "${var.region}"
   additional_zones   = ["${var.zones}"]
   initial_node_count = 1
-  min_master_version = "${data.external.container-regional-versions-beta.result.latest_master_version}"
+  min_master_version = "${data.google_container_engine_versions.default.latest_node_version}"
   network            = "${google_compute_subnetwork.tf-ci.network}"
   subnetwork         = "${google_compute_subnetwork.tf-ci.name}"
 

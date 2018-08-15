@@ -35,9 +35,9 @@ params:
   example_dir:
   infra_dir:
   region:
-  zone1:
-  zone2:
-  zone3:
+  TF_VAR_zone1:
+  TF_VAR_zone2:
+  TF_VAR_zone3:
   TF_VAR_name:
 run:
   path: bash
@@ -98,7 +98,7 @@ run:
 
     cat > terraform.tfvars <<EOF
     region = "$region"
-    zones = ["${zone1}", "${zone2}", "${zone3}"]
+    zones = ["${TF_VAR_zone1}", "${TF_VAR_zone1}", "${TF_VAR_zone1}"]
     network_name = "$env_name"
     EOF
 
