@@ -100,7 +100,7 @@ resource "google_compute_firewall" "nat-squid" {
   }
 
   source_tags = ["${var.network_name}-squid"]
-  target_tags = ["${var.network_name}-nat-${var.zone}"]
+  target_tags = ["inst-${module.nat.routing_tag_zonal}"]
 }
 
 output "nat-host" {
