@@ -95,6 +95,7 @@ jobs:
       infra_dir: git/tests/infra/example-gke-nat-gateway-regional
       region: us-west1
       zone: us-west1-b
+      TF_VAR_zone: us-west1-b
     on_failure:
       put: send-an-email
       params:

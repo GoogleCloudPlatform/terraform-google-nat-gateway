@@ -18,6 +18,10 @@ variable region {
   default = "us-central1"
 }
 
+variable zone {
+  default = "us-central1-a"
+}
+
 variable network_name {
   default = "tf-ci-nat-gke-regional"
 }
@@ -29,7 +33,7 @@ provider google {
 }
 
 data "google_container_engine_versions" "default" {
-  zone = "${element(var.zones, 0)}"
+  zone = "${var.zone}"
 }
 
 resource "google_compute_network" "tf-ci" {

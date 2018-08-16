@@ -103,6 +103,7 @@ jobs:
       infra_dir: git/tests/infra/example-gke-nat-gateway-regional
       region: us-east4
       zone: us-east4-c
+      TF_VAR_zone: us-east4-c
     on_failure:
       put: git-pull-requests
       params:
@@ -123,6 +124,7 @@ jobs:
       infra_dir: git/tests/infra/example-gke-nat-gateway-regional
       region: us-east4
       zone: us-east4-c
+      TF_VAR_zone: us-east4-c
     on_failure:
       put: git-pull-requests
       params:
