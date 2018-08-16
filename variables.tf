@@ -112,6 +112,11 @@ variable instance_labels {
   default     = {}
 }
 
+variable autohealing_enabled {
+  description = "Enable instance autohealing using http health check"
+  default     = false
+}
+
 variable region_params {
   description = "Map of default zones and IPs for each region. Can be overridden using the `zone` and `ip` variables."
   type        = "map"
