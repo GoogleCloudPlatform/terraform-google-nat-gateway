@@ -46,7 +46,7 @@ locals {
 
 module "nat-gateway" {
   source             = "GoogleCloudPlatform/managed-instance-group/google"
-  version            = "1.1.11"
+  version            = "1.1.12"
   module_enabled     = "${var.module_enabled}"
   project            = "${var.project}"
   region             = "${var.region}"
@@ -67,6 +67,16 @@ module "nat-gateway" {
   wait_for_instances = true
   metadata           = "${var.metadata}"
   ssh_source_ranges  = "${var.ssh_source_ranges}"
+
+  update_strategy    = "ROLLING_UPDATE"
+
+  rolling_update_policy = [{
+    type                  = "PROACTIVE"
+    minimal_action        = "REPLACE"
+    max_surge_fixed       = 0
+    max_unavailable_fixed = 1
+    min_ready_sec         = 30
+  }]
 
   access_config = [
     {
