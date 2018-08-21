@@ -65,7 +65,7 @@ resource "google_compute_subnetwork" "staging" {
 }
 
 module "staging-mig1" {
-  source             = "GoogleCloudPlatform/managed-instance-group"
+  source             = "GoogleCloudPlatform/managed-instance-group/google"
   version            = "1.1.13"
   region             = "${var.region}"
   zone               = "${var.zone}"
@@ -105,7 +105,7 @@ resource "google_compute_subnetwork" "production" {
 }
 
 module "production-mig1" {
-  source             = "GoogleCloudPlatform/managed-instance-group"
+  source             = "GoogleCloudPlatform/managed-instance-group/google"
   version            = "1.1.13"
   region             = "${var.region}"
   zone               = "${var.zone}"
@@ -131,7 +131,8 @@ module "production-nat-gateway" {
 }
 
 module "gce-lb-http" {
-  source            = "github.com/GoogleCloudPlatform/terraform-google-lb-http"
+  source            = "GoogleCloudPlatform/lb-http/google"
+  version           = "1.0.8"
   name              = "${var.production_network_name}-lb"
   target_tags       = ["allow-staging", "allow-production"]
   firewall_networks = ["${google_compute_network.staging.name}", "${google_compute_network.production.name}"]
