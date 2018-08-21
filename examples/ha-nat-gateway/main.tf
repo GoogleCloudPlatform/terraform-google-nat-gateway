@@ -79,7 +79,8 @@ module "nat-zone-3" {
 }
 
 module "mig1" {
-  source             = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  source             = "GoogleCloudPlatform/managed-instance-group/google"
+  version            = "1.1.13"
   region             = "${var.region}"
   zone               = "${var.zone1}"
   name               = "${var.network_name}-mig"
