@@ -53,6 +53,7 @@ resource "google_container_cluster" "tf-ci" {
   name               = "${var.network_name}"
   region             = "${var.region}"
   initial_node_count = 1
+
   # min_master_version = "${data.google_container_engine_versions.default.latest_node_version}"
   min_master_version = "${data.external.container-regional-versions-beta.result.latest_master_version}"
   network            = "${google_compute_subnetwork.tf-ci.network}"

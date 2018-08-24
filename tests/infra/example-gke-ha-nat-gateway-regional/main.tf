@@ -32,9 +32,10 @@ provider google {
   region = "${var.region}"
 }
 
-data "google_container_engine_versions" "default" {
-  zone = "${element(var.zones, 0)}"
-}
+# Remove until this issue is resolved: https://github.com/terraform-providers/terraform-provider-google/issues/1937
+# data "google_container_engine_versions" "default" {
+#   zone = "${element(var.zones, 0)}"
+# }
 
 resource "google_compute_network" "tf-ci" {
   name                    = "${var.network_name}"
@@ -55,7 +56,9 @@ resource "google_container_cluster" "tf-ci" {
   region             = "${var.region}"
   additional_zones   = ["${var.zones}"]
   initial_node_count = 1
-  min_master_version = "${data.google_container_engine_versions.default.latest_node_version}"
+
+  # min_master_version = "${data.google_container_engine_versions.default.latest_node_version}"
+  min_master_version = "${data.external.container-regional-versions-beta.result.latest_master_version}"
   network            = "${google_compute_subnetwork.tf-ci.network}"
   subnetwork         = "${google_compute_subnetwork.tf-ci.name}"
 
