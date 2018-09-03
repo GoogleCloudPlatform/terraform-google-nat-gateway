@@ -35,7 +35,7 @@ variable network {
 }
 
 variable subnetwork {
-  default = "default"
+  default = ""
 }
 
 provider google {
@@ -49,7 +49,7 @@ module "nat" {
   zone       = "${var.zone}"
   tags       = ["${var.gke_node_tag}"]
   network    = "${var.network}"
-  subnetwork = "${var.subnetwork}"
+  subnetwork = "${var.subnetwork == "" ? var.network : var.subnetwork}"
 }
 
 // Route so that traffic to the master goes through the default gateway.
