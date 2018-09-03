@@ -28,7 +28,7 @@ terraform {
 }
 EOF
 
-terraform init >/dev/null
+terraform init -get-plugins=true >/dev/null
 
 function isStateEmpty() {
     terraform workspace select -no-color $1 >/dev/null

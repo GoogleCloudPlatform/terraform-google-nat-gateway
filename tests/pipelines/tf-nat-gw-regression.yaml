@@ -95,6 +95,7 @@ jobs:
       infra_dir: git/tests/infra/example-gke-nat-gateway-regional
       region: us-west1
       zone: us-west1-b
+      TF_VAR_zone: us-west1-b
     on_failure:
       put: send-an-email
       params:
@@ -158,9 +159,10 @@ jobs:
       example_dir: examples/gke-ha-nat-gateway
       infra_dir: git/tests/infra/example-gke-ha-nat-gateway-regional
       region: us-central1
-      zone1: us-central1-a
-      zone2: us-central1-b
-      zone3: us-central1-c
+      TF_VAR_zone1: us-central1-a
+      TF_VAR_zone2: us-central1-b
+      TF_VAR_zone3: us-central1-c
+      TF_VAR_name: tf-ci-gke-ha
     on_failure:
       put: send-an-email
       params:

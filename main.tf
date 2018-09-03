@@ -36,19 +36,27 @@ data "google_compute_address" "default" {
   region  = "${var.region}"
 }
 
+locals {
+  zone          = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name          = "${var.name}nat-gateway-${local.zone}"
+  instance_tags = ["inst-${local.zonal_tag}", "inst-${local.regional_tag}"]
+  zonal_tag     = "${var.name}nat-${local.zone}"
+  regional_tag  = "${var.name}nat-${var.region}"
+}
+
 module "nat-gateway" {
   source             = "GoogleCloudPlatform/managed-instance-group/google"
-  version            = "1.1.10"
+  version            = "1.1.13"
   module_enabled     = "${var.module_enabled}"
   project            = "${var.project}"
   region             = "${var.region}"
-  zone               = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  zone               = "${local.zone}"
   network            = "${var.network}"
   subnetwork         = "${var.subnetwork}"
-  target_tags        = ["${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
+  target_tags        = ["${local.instance_tags}"]
   instance_labels    = "${var.instance_labels}"
   machine_type       = "${var.machine_type}"
-  name               = "${var.name}nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name               = "${local.name}"
   compute_image      = "${var.compute_image}"
   size               = 1
   network_ip         = "${var.ip}"
@@ -59,6 +67,17 @@ module "nat-gateway" {
   wait_for_instances = true
   metadata           = "${var.metadata}"
   ssh_source_ranges  = "${var.ssh_source_ranges}"
+  http_health_check  = "${var.autohealing_enabled}"
+
+  update_strategy = "ROLLING_UPDATE"
+
+  rolling_update_policy = [{
+    type                  = "PROACTIVE"
+    minimal_action        = "REPLACE"
+    max_surge_fixed       = 0
+    max_unavailable_fixed = 1
+    min_ready_sec         = 30
+  }]
 
   access_config = [
     {
@@ -69,19 +88,19 @@ module "nat-gateway" {
 
 resource "google_compute_route" "nat-gateway" {
   count                  = "${var.module_enabled ? 1 : 0}"
-  name                   = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name                   = "${local.zonal_tag}"
   project                = "${var.project}"
   dest_range             = "${var.dest_range}"
   network                = "${data.google_compute_network.network.self_link}"
   next_hop_instance      = "${element(split("/", element(module.nat-gateway.instances[0], 0)), 10)}"
-  next_hop_instance_zone = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
-  tags                   = ["${compact(concat(list("${var.name}nat-${var.region}"), var.tags))}"]
+  next_hop_instance_zone = "${local.zone}"
+  tags                   = ["${compact(concat(list("${local.regional_tag}", "${local.zonal_tag}"), var.tags))}"]
   priority               = "${var.route_priority}"
 }
 
 resource "google_compute_firewall" "nat-gateway" {
   count   = "${var.module_enabled ? 1 : 0}"
-  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name    = "${local.zonal_tag}"
   network = "${var.network}"
   project = "${var.project}"
 
@@ -89,13 +108,13 @@ resource "google_compute_firewall" "nat-gateway" {
     protocol = "all"
   }
 
-  source_tags = ["${compact(concat(list("${var.name}nat-${var.region}", "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
-  target_tags = ["${compact(concat(list("${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"), var.tags))}"]
+  source_tags = ["${compact(concat(list("${local.regional_tag}", "${local.zonal_tag}"), var.tags))}"]
+  target_tags = ["${compact(concat(local.instance_tags, var.tags))}"]
 }
 
 resource "google_compute_address" "default" {
   count   = "${var.module_enabled && var.ip_address_name == "" ? 1 : 0}"
-  name    = "${var.name}nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
+  name    = "${local.zonal_tag}"
   project = "${var.project}"
   region  = "${var.region}"
 }

@@ -39,7 +39,7 @@ variable zone3 {
 }
 
 variable name {
-  default = "gke-ha-"
+  default = "gke-ha"
 }
 
 variable network {
