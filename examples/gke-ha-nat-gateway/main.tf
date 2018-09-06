@@ -46,6 +46,10 @@ variable network {
   default = "default"
 }
 
+variable subnetwork {
+  default = ""
+}
+
 provider google {
   region = "${var.region}"
 }
@@ -57,7 +61,7 @@ module "nat-zone-1" {
   zone           = "${var.zone1}"
   tags           = ["${var.gke_node_tag}"]
   network        = "${var.network}"
-  subnetwork     = "${var.network}"
+  subnetwork     = "${var.subnetwork == "" ? var.network : var.subnetwork}"
   route_priority = 800
 }
 
@@ -68,7 +72,7 @@ module "nat-zone-2" {
   zone           = "${var.zone2}"
   tags           = ["${var.gke_node_tag}"]
   network        = "${var.network}"
-  subnetwork     = "${var.network}"
+  subnetwork     = "${var.subnetwork == "" ? var.network : var.subnetwork}"
   route_priority = 800
 }
 
@@ -79,7 +83,7 @@ module "nat-zone-3" {
   zone           = "${var.zone3}"
   tags           = ["${var.gke_node_tag}"]
   network        = "${var.network}"
-  subnetwork     = "${var.network}"
+  subnetwork     = "${var.subnetwork == "" ? var.network : var.subnetwork}"
   route_priority = 800
 }
 
