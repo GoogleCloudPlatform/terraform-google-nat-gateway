@@ -4,7 +4,7 @@ This example creates a global HTTP forwarding rule to instance groups in separat
 
 **Figure 1.** *diagram of Google Cloud resources*
 
-![architecture diagram](./diagram.png)
+![architecture diagram](https://raw.githubusercontent.com/GoogleCloudPlatform/terraform-google-nat-gateway/master/examples/multiple-nat-environments/diagram.png)
 
 ## Setup Environment
 

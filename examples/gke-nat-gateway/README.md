@@ -4,7 +4,7 @@ This example creates a NAT Gateway and Compute Engine Network Routes to route ou
 
 **Figure 1.** *diagram of Google Cloud resources*
 
-![architecture diagram](./diagram.png)
+![architecture diagram](https://raw.githubusercontent.com/GoogleCloudPlatform/terraform-google-nat-gateway/master/examples/gke-nat-gateway/diagram.png)
 
 > Note: This example only deploys a single-node NAT gateway instance and is not intended for production use. See the [ha-natgateway](../ha-nat-gateway) example for a highly available option.
 

@@ -4,7 +4,7 @@ This example creates three NAT Gateway instances in different zones and Compute 
 
 **Figure 1.** *diagram of Google Cloud resources*
 
-![architecture diagram](./diagram.png)
+![architecture diagram](https://raw.githubusercontent.com/GoogleCloudPlatform/terraform-google-nat-gateway/master/examples/gke-ha-nat-gateway/diagram.png)
 
 ## Setup Environment
 

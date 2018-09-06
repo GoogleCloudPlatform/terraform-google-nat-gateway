@@ -4,7 +4,7 @@ This example creates a NAT gateway in 3 Compute Engine zones within the same reg
 
 **Figure 1.** *diagram of Google Cloud resources*
 
-![architecture diagram](./diagram.png)
+![architecture diagram](https://raw.githubusercontent.com/GoogleCloudPlatform/terraform-google-nat-gateway/master/examples/ha-nat-gateway/diagram.png)
 
 ## Setup Environment
 

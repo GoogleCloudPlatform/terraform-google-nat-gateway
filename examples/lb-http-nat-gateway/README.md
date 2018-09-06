@@ -4,7 +4,7 @@ This example creates a global HTTP forwarding rule to an instance group without 
 
 **Figure 1.** *diagram of Google Cloud resources*
 
-![architecture diagram](./diagram.png)
+![architecture diagram](https://raw.githubusercontent.com/GoogleCloudPlatform/terraform-google-nat-gateway/master/examples/lb-http-nat-gateway/diagram.png)
 
 ## Setup Environment
 
