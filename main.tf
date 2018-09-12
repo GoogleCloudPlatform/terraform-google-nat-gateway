@@ -45,39 +45,42 @@ locals {
 }
 
 module "nat-gateway" {
-  source             = "GoogleCloudPlatform/managed-instance-group/google"
-  version            = "1.1.13"
-  module_enabled     = "${var.module_enabled}"
-  project            = "${var.project}"
-  region             = "${var.region}"
-  zone               = "${local.zone}"
-  network            = "${var.network}"
-  subnetwork         = "${var.subnetwork}"
-  target_tags        = ["${local.instance_tags}"]
-  instance_labels    = "${var.instance_labels}"
-  machine_type       = "${var.machine_type}"
-  name               = "${local.name}"
-  compute_image      = "${var.compute_image}"
-  size               = 1
-  network_ip         = "${var.ip}"
-  can_ip_forward     = "true"
-  service_port       = "80"
-  service_port_name  = "http"
-  startup_script     = "${data.template_file.nat-startup-script.rendered}"
-  wait_for_instances = true
-  metadata           = "${var.metadata}"
-  ssh_source_ranges  = "${var.ssh_source_ranges}"
-  http_health_check  = "${var.autohealing_enabled}"
+  source                = "GoogleCloudPlatform/managed-instance-group/google"
+  version               = "1.1.13"
+  module_enabled        = "${var.module_enabled}"
+  project               = "${var.project}"
+  region                = "${var.region}"
+  zone                  = "${local.zone}"
+  network               = "${var.network}"
+  subnetwork            = "${var.subnetwork}"
+  target_tags           = ["${local.instance_tags}"]
+  instance_labels       = "${var.instance_labels}"
+  service_account_email = "${var.service_account_email}"
+  machine_type          = "${var.machine_type}"
+  name                  = "${local.name}"
+  compute_image         = "${var.compute_image}"
+  size                  = 1
+  network_ip            = "${var.ip}"
+  can_ip_forward        = "true"
+  service_port          = "80"
+  service_port_name     = "http"
+  startup_script        = "${data.template_file.nat-startup-script.rendered}"
+  wait_for_instances    = true
+  metadata              = "${var.metadata}"
+  ssh_source_ranges     = "${var.ssh_source_ranges}"
+  http_health_check     = "${var.autohealing_enabled}"
 
   update_strategy = "ROLLING_UPDATE"
 
-  rolling_update_policy = [{
-    type                  = "PROACTIVE"
-    minimal_action        = "REPLACE"
-    max_surge_fixed       = 0
-    max_unavailable_fixed = 1
-    min_ready_sec         = 30
-  }]
+  rolling_update_policy = [
+    {
+      type                  = "PROACTIVE"
+      minimal_action        = "REPLACE"
+      max_surge_fixed       = 0
+      max_unavailable_fixed = 1
+      min_ready_sec         = 30
+    },
+  ]
 
   access_config = [
     {
