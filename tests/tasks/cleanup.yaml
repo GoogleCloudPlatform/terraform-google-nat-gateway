@@ -69,5 +69,5 @@ run:
 
     # Cleanup infra
     if [[ -n "${infra_dir}" ]]; then
-      (cd "${infra_dir}" && ../../cleanup.sh ${env_name}-infra && && gsutil rm gs://${backend_bucket}/${backend_prefix}/${env_name}-infra.tfstate)
+      (cd "${infra_dir}" && ../../cleanup.sh ${env_name}-infra && gsutil rm gs://${backend_bucket}/${backend_prefix}/${env_name}-infra.tfstate)
     fi

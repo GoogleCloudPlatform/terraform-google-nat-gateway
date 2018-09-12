@@ -27,6 +27,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-zonal
       example_dir: examples/gke-nat-gateway
       infra_dir: tests/infra/example-gke-nat-gateway-zonal
@@ -45,6 +47,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-zonal-pr
       example_dir: examples/gke-nat-gateway
       infra_dir: tests/infra/example-gke-nat-gateway-zonal
@@ -63,6 +67,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-regional
       example_dir: examples/gke-nat-gateway
       infra_dir: tests/infra/example-gke-nat-gateway-regional
@@ -81,6 +87,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-regional-pr
       example_dir: examples/gke-nat-gateway
       infra_dir: tests/infra/example-gke-nat-gateway-regional
@@ -99,6 +107,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-private
       example_dir: examples/gke-nat-gateway
       infra_dir: tests/infra/example-gke-nat-gateway-private
@@ -117,6 +127,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-private-pr
       example_dir: examples/gke-nat-gateway
       infra_dir: tests/infra/example-gke-nat-gateway-private
@@ -135,6 +147,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-ha-regional
       example_dir: examples/gke-ha-nat-gateway
       infra_dir: tests/infra/example-gke-ha-nat-gateway-regional
@@ -153,6 +167,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-gke-ha-regional-pr
       example_dir: examples/gke-ha-nat-gateway
       infra_dir: tests/infra/example-gke-ha-nat-gateway-regional
@@ -171,6 +187,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-ha
       example_dir: examples/ha-nat-gateway
     file: git/tests/tasks/cleanup.yaml
@@ -188,6 +206,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-ha-pr
       example_dir: examples/ha-nat-gateway
     file: git/tests/tasks/cleanup.yaml
@@ -205,6 +225,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-lb
       example_dir: examples/lb-http-nat-gateway
     file: git/tests/tasks/cleanup.yaml
@@ -222,6 +244,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-lb-pr
       example_dir: examples/lb-http-nat-gateway
     file: git/tests/tasks/cleanup.yaml
@@ -239,6 +263,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-multi-env
       example_dir: examples/multiple-nat-environments
     file: git/tests/tasks/cleanup.yaml
@@ -256,6 +282,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-multi-env-pr
       example_dir: examples/multiple-nat-environments
     file: git/tests/tasks/cleanup.yaml
@@ -273,6 +301,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-disable
       example_dir: examples/module-disable
     file: git/tests/tasks/cleanup.yaml
@@ -290,6 +320,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-disable-pr
       example_dir: examples/module-disable
     file: git/tests/tasks/cleanup.yaml
@@ -307,6 +339,8 @@ jobs:
     params:
       service_account_json: ((regression-project.service_account_json))
       project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-squid
       example_dir: examples/squid-proxy
     file: git/tests/tasks/cleanup.yaml
@@ -324,6 +358,8 @@ jobs:
     params:
       service_account_json: ((pr-project.service_account_json))
       project_id: ((pr-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-nat-gateway
       env_name: tf-ci-nat-squid-pr
       example_dir: examples/squid-proxy
     file: git/tests/tasks/cleanup.yaml
