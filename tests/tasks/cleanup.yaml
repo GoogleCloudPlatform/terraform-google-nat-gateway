@@ -64,9 +64,10 @@ run:
     export GOOGLE_PROJECT=$project_id
 
     # Cleanup example
-    (cd "${example_dir}" && ../../tests/cleanup.sh ${env_name})
+    (cd "${example_dir}" && ../../tests/cleanup.sh ${env_name} && gsutil rm gs://${backend_bucket}/${backend_prefix}/${env_name}.tfstate)
+
 
     # Cleanup infra
     if [[ -n "${infra_dir}" ]]; then
-      (cd "${infra_dir}" && ../../cleanup.sh ${env_name}-infra)
+      (cd "${infra_dir}" && ../../cleanup.sh ${env_name}-infra && && gsutil rm gs://${backend_bucket}/${backend_prefix}/${env_name}-infra.tfstate)
     fi
