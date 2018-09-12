@@ -112,6 +112,11 @@ variable instance_labels {
   default     = {}
 }
 
+variable service_account_email {
+  description = "The email of the service account for the instance template."
+  default     = "default"
+}
+
 variable autohealing_enabled {
   description = "Enable instance autohealing using http health check"
   default     = false
