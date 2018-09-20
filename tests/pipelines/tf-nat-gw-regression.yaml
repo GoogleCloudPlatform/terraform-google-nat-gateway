@@ -43,6 +43,7 @@ jobs:
 ###
 - name: run-example-gke-zonal
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -75,6 +76,7 @@ jobs:
 ###
 - name: run-example-gke-regional
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -108,6 +110,7 @@ jobs:
 ###
 - name: run-example-gke-private
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -140,6 +143,7 @@ jobs:
 ###
 - name: run-example-gke-ha-regional
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -175,6 +179,7 @@ jobs:
 ###
 - name: run-example-ha-nat-gateway
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -212,6 +217,7 @@ jobs:
 ###
 - name: run-example-lb-nat-gateway
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -247,6 +253,7 @@ jobs:
 ###
 - name: run-example-multi-env
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -285,6 +292,7 @@ jobs:
 ###
 - name: run-example-module-disable
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true
@@ -320,6 +328,7 @@ jobs:
 ###
 - name: run-example-squid-proxy
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: once-a-day
     trigger: true

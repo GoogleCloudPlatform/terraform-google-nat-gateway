@@ -19,6 +19,7 @@ jobs:
 ###
 - name: run-example-gke-zonal-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -77,6 +78,7 @@ jobs:
 ###
 - name: run-example-gke-regional-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -137,6 +139,7 @@ jobs:
 ###
 - name: run-example-gke-ha-regional-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -201,6 +204,7 @@ jobs:
 ###
 - name: run-example-gke-private-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -259,6 +263,7 @@ jobs:
 ###
 - name: run-example-ha-nat-gateway-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -327,6 +332,7 @@ jobs:
 ###
 - name: run-example-lb-nat-gateway-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -391,6 +397,7 @@ jobs:
 ###
 - name: run-example-multi-env-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -461,6 +468,7 @@ jobs:
 ###
 - name: run-example-module-disable-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -525,6 +533,7 @@ jobs:
 ###
 - name: run-example-squid-proxy-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false

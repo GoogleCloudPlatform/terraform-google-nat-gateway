@@ -19,6 +19,7 @@ jobs:
 ###
 - name: cleanup-example-gke-zonal
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -39,6 +40,7 @@ jobs:
 ###
 - name: cleanup-example-gke-zonal-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -59,6 +61,7 @@ jobs:
 ###
 - name: cleanup-example-gke-regional
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -79,6 +82,7 @@ jobs:
 ###
 - name: cleanup-example-gke-regional-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -99,6 +103,7 @@ jobs:
 ###
 - name: cleanup-example-gke-private
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -119,6 +124,7 @@ jobs:
 ###
 - name: cleanup-example-gke-private-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -139,6 +145,7 @@ jobs:
 ###
 - name: cleanup-example-gke-ha-regional
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -159,6 +166,7 @@ jobs:
 ###
 - name: cleanup-example-gke-ha-regional-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -179,6 +187,7 @@ jobs:
 ###
 - name: cleanup-example-ha-nat-gateway
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -198,6 +207,7 @@ jobs:
 ###
 - name: cleanup-example-ha-nat-gateway-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -217,6 +227,7 @@ jobs:
 ###
 - name: cleanup-example-lb-nat-gateway
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -236,6 +247,7 @@ jobs:
 ###
 - name: cleanup-example-lb-nat-gateway-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -255,6 +267,7 @@ jobs:
 ###
 - name: cleanup-example-multi-env
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -274,6 +287,7 @@ jobs:
 ###
 - name: cleanup-example-multi-env-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -293,6 +307,7 @@ jobs:
 ###
 - name: cleanup-example-module-disable
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -312,6 +327,7 @@ jobs:
 ###
 - name: cleanup-example-module-disable-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -331,6 +347,7 @@ jobs:
 ###
 - name: cleanup-example-squid-proxy
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
@@ -350,6 +367,7 @@ jobs:
 ###
 - name: cleanup-example-squid-proxy-pr
   serial: true
+  build_logs_to_retain: 10
   plan:
   - get: git
     trigger: false
