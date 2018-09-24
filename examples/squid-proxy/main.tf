@@ -23,7 +23,7 @@ variable zone {
 }
 
 variable "vm_image" {
-  default = "debian-cloud/debian-9"
+  default = "projects/debian-cloud/global/images/family/debian-9"
 }
 
 provider google {
