@@ -66,7 +66,7 @@ resource "google_compute_subnetwork" "staging" {
 
 module "staging-mig1" {
   source             = "GoogleCloudPlatform/managed-instance-group/google"
-  version            = "1.1.13"
+  version            = "1.1.14"
   region             = "${var.region}"
   zone               = "${var.zone}"
   name               = "${var.staging_mig_name}"
@@ -106,7 +106,7 @@ resource "google_compute_subnetwork" "production" {
 
 module "production-mig1" {
   source             = "GoogleCloudPlatform/managed-instance-group/google"
-  version            = "1.1.13"
+  version            = "1.1.14"
   region             = "${var.region}"
   zone               = "${var.zone}"
   name               = "${var.production_mig_name}"
