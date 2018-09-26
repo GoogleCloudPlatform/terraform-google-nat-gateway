@@ -132,7 +132,7 @@ module "production-nat-gateway" {
 
 module "gce-lb-http" {
   source            = "GoogleCloudPlatform/lb-http/google"
-  version           = "1.0.8"
+  version           = "1.0.10"
   name              = "${var.production_network_name}-lb"
   target_tags       = ["allow-staging", "allow-production"]
   firewall_networks = ["${google_compute_network.staging.name}", "${google_compute_network.production.name}"]

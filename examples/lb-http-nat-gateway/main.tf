@@ -70,7 +70,6 @@ module "mig1" {
 }
 
 module "nat-gateway" {
-  // source  = "github.com/GoogleCloudPlatform/terraform-google-nat-gateway"
   source     = "../../"
   region     = "${var.region}"
   zone       = "${var.zone}"
@@ -79,7 +78,8 @@ module "nat-gateway" {
 }
 
 module "gce-lb-http" {
-  source            = "github.com/GoogleCloudPlatform/terraform-google-lb-http"
+  source            = "GoogleCloudPlatform/lb-http/google"
+  version           = "1.0.10"
   name              = "${var.network_name}-lb"
   target_tags       = ["${var.network_name}-mig"]
   firewall_networks = ["${google_compute_subnetwork.default.name}"]
