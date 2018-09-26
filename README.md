@@ -23,7 +23,7 @@ And add the tag `${module.nat.routing_tag_regional}` to your instances without e
 ```ruby
 module "mig" {
   source      = "GoogleCloudPlatform/managed-instance-group/google"
-  version     = "1.1.13"
+  version     = "1.1.14"
   region      = "us-central1"
   zone        = "us-central1-a"
   name        = "testnat"

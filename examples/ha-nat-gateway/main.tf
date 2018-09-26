@@ -80,7 +80,7 @@ module "nat-zone-3" {
 
 module "mig1" {
   source             = "GoogleCloudPlatform/managed-instance-group/google"
-  version            = "1.1.13"
+  version            = "1.1.14"
   region             = "${var.region}"
   zone               = "${var.zone1}"
   name               = "${var.network_name}-mig"
