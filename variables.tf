@@ -100,6 +100,11 @@ variable metadata {
   default     = {}
 }
 
+variable "ssh_fw_rule" {
+  description = "Whether or not the SSH Firewall Rule should be created"
+  default     = true
+}
+
 variable ssh_source_ranges {
   description = "Network ranges to allow SSH from"
   type        = "list"

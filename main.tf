@@ -67,6 +67,7 @@ module "nat-gateway" {
   startup_script        = "${data.template_file.nat-startup-script.rendered}"
   wait_for_instances    = true
   metadata              = "${var.metadata}"
+  ssh_fw_rule           = "${var.ssh_fw_rule}"
   ssh_source_ranges     = "${var.ssh_source_ranges}"
   http_health_check     = "${var.autohealing_enabled}"
 
