@@ -50,10 +50,10 @@ module "nat-gateway" {
   module_enabled        = "${var.module_enabled}"
   project               = "${var.project}"
   region                = "${var.region}"
-  zone                  = "${local.zone}"
+  zone                  = "${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   network               = "${var.network}"
   subnetwork            = "${var.subnetwork}"
-  target_tags           = ["${local.instance_tags}"]
+  target_tags           = ["nat-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"]
   instance_labels       = "${var.instance_labels}"
   service_account_email = "${var.service_account_email}"
   machine_type          = "${var.machine_type}"
