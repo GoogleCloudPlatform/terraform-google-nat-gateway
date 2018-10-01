@@ -45,7 +45,7 @@ locals {
 }
 
 module "nat-gateway" {
-  source                = "GoogleCloudPlatform/managed-instance-group/google"
+  source                = "github.com/ImpactInc/terraform-google-managed-instance-group"
   version               = "1.1.14"
   module_enabled        = "${var.module_enabled}"
   project               = "${var.project}"
@@ -57,7 +57,7 @@ module "nat-gateway" {
   instance_labels       = "${var.instance_labels}"
   service_account_email = "${var.service_account_email}"
   machine_type          = "${var.machine_type}"
-  name                  = "${local.name}"
+  name                  = "nat-gateway-${var.zone == "" ? lookup(var.region_params["${var.region}"], "zone") : var.zone}"
   compute_image         = "${var.compute_image}"
   size                  = 1
   network_ip            = "${var.ip}"
