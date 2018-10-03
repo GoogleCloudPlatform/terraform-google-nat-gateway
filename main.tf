@@ -50,7 +50,7 @@ module "nat-gateway" {
   module_enabled        = "${var.module_enabled}"
   project               = "${var.project}"
   region                = "${var.region}"
-  zone                  = "${local.zone}""
+  zone                  = "${local.zone}"
   network               = "${var.network}"
   subnetwork            = "${var.subnetwork}"
   target_tags           = ["${local.instance_tags}"]
