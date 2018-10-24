@@ -136,6 +136,10 @@ variable region_params {
       zone = "asia-east1-b"
     }
 
+    asia-east2 = {
+      zone = "asia-east2-b"
+    }
+
     asia-northeast1 = {
       zone = "asia-northeast1-b"
     }
