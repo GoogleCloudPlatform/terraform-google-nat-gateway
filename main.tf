@@ -46,7 +46,7 @@ locals {
 
 module "nat-gateway" {
   source                = "GoogleCloudPlatform/managed-instance-group/google"
-  version               = "1.1.14"
+  version               = "1.1.15"
   module_enabled        = "${var.module_enabled}"
   project               = "${var.project}"
   region                = "${var.region}"
