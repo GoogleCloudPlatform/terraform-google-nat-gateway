@@ -58,6 +58,16 @@ variable ip_address_name {
   default     = ""
 }
 
+variable external_ip_address {
+  description = "Address of existing IP reservation to use."
+  default     = ""
+}
+
+variable use_external_ip_address {
+  description = "Set to true when ip_address input variable is set."
+  default     = "false"
+}
+
 variable tags {
   description = "Additional compute instance network tags to apply route to."
   type        = "list"
