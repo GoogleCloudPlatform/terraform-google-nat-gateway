@@ -175,6 +175,10 @@ variable region_params {
     europe-west4 = {
       zone = "europe-west4-b"
     }
+    
+    europe-west6 = {
+      zone = "europe-west6-b"
+    }
 
     northamerica-northeast1 = {
       zone = "northamerica-northeast1-b"
