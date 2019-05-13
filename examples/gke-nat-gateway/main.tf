@@ -40,6 +40,7 @@ variable subnetwork {
 
 provider google {
   region = "${var.region}"
+  version = "1.18"
 }
 
 module "nat" {
