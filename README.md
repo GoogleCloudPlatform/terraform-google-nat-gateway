@@ -1,11 +1,7 @@
 # NAT Gateway Terraform Module
 
-## NOTE: This module is no longer maintained. Please use [Cloud NAT](https://github.com/terraform-google-modules/terraform-google-cloud-nat) instead.
-
-Modular NAT Gateway on Google Compute Engine for Terraform.
-
-<a href="https://concourse-tf.gcp.solutions/teams/main/pipelines/tf-nat-gw-regression" target="_blank">
-<img src="https://concourse-tf.gcp.solutions/api/v1/teams/main/pipelines/tf-nat-gw-regression/badge" /></a>
+## Deprecation Notice
+**NOTE: This module is no longer maintained.** Please use [Cloud NAT](https://github.com/terraform-google-modules/terraform-google-cloud-nat) instead. For information on how to migrate to the Cloud NAT module, refer to the [migration guide](./docs/cloud-nat-migration-guide.md).
         
 ## Usage
 
