@@ -85,7 +85,7 @@ module "nat-gateway" {
 
   access_config = [
     {
-      nat_ip = "${element(concat(google_compute_address.default.*.address, data.google_compute_address.default.*.address, list("")), 0)}"
+      nat_ip = "${element(concat(google_compute_address.default.*.address, data.google_compute_address.default.*.address, list(var.external_ip_address)), 0)}"
     },
   ]
 }
@@ -117,7 +117,7 @@ resource "google_compute_firewall" "nat-gateway" {
 }
 
 resource "google_compute_address" "default" {
-  count   = "${var.module_enabled && var.ip_address_name == "" ? 1 : 0}"
+  count   = "${var.module_enabled && var.ip_address_name == "" && var.use_external_ip_address != "true" ? 1 : 0}"
   name    = "${local.zonal_tag}"
   project = "${var.project}"
   region  = "${var.region}"
