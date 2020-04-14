@@ -91,10 +91,10 @@ module "nat-gateway" {
 }
 
 resource "google_compute_route" "nat-gateway" {
-  count                  = "${var.module_enabled ? 1 : 0}"
-  name                   = "${local.zonal_tag}"
+  count                  = "${var.module_enabled ? length(var.dest_ranges) : 0}"
+  name                   = "${local.zonal_tag}-${count.index}"
   project                = "${var.project}"
-  dest_range             = "${var.dest_range}"
+  dest_range             = "${element(var.dest_ranges, count.index)}"
   network                = "${data.google_compute_network.network.self_link}"
   next_hop_instance      = "${element(split("/", element(module.nat-gateway.instances[0], 0)), 10)}"
   next_hop_instance_zone = "${local.zone}"
