@@ -57,6 +57,8 @@ module "nat-gateway" {
   instance_labels       = "${var.instance_labels}"
   service_account_email = "${var.service_account_email}"
   machine_type          = "${var.machine_type}"
+  disk_type             = "${var.disk_type}"
+  disk_size_gb          = "${var.disk_size_gb}"
   name                  = "${local.name}"
   compute_image         = "${var.compute_image}"
   size                  = 1
